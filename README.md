@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jn-jairo/laravel-ngrok.svg?branch=master)](https://travis-ci.org/jn-jairo/laravel-ngrok)
+[![Build Status](https://travis-ci.com/jn-jairo/laravel-ngrok.svg?branch=master)](https://travis-ci.com/jn-jairo/laravel-ngrok)
 [![Total Downloads](https://poser.pugx.org/jn-jairo/laravel-ngrok/downloads)](https://packagist.org/packages/jn-jairo/laravel-ngrok)
 [![Latest Stable Version](https://poser.pugx.org/jn-jairo/laravel-ngrok/v/stable)](https://packagist.org/packages/jn-jairo/laravel-ngrok)
 [![License](https://poser.pugx.org/jn-jairo/laravel-ngrok/license)](https://packagist.org/packages/jn-jairo/laravel-ngrok)
