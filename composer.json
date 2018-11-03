@@ -18,6 +18,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "illuminate/console": "~5.5.28|5.6.*|5.7.*",
         "illuminate/http": "~5.5.28|5.6.*|5.7.*",
+        "illuminate/pagination": "~5.5.28|5.6.*|5.7.*",
         "illuminate/routing": "~5.5.28|5.6.*|5.7.*",
         "illuminate/support": "~5.5.28|5.6.*|5.7.*",
         "symfony/process": "^3.3|^4.0"

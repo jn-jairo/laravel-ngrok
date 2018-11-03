@@ -3,6 +3,7 @@
 namespace JnJairo\Laravel\Ngrok;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\ServiceProvider;
 use JnJairo\Laravel\Ngrok\NgrokCommand;
@@ -64,6 +65,10 @@ class NgrokServiceProvider extends ServiceProvider
 
             $urlGenerator->forceScheme($scheme);
             $urlGenerator->forceRootUrl($scheme . '://' . $host);
+
+            Paginator::currentPathResolver(function () use ($urlGenerator, $request) {
+                return $urlGenerator->to($request->path());
+            });
         }
     }
 
