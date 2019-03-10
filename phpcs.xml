@@ -10,4 +10,5 @@
     <rule ref="Generic.Files.LineLength.TooLong">
         <type>error</type>
     </rule>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
 </ruleset>

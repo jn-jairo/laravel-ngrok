@@ -19,7 +19,7 @@ class NgrokServiceProvider extends ServiceProvider
      */
     public function boot() : void
     {
-        if (!$this->app->runningInConsole()) {
+        if (! $this->app->runningInConsole()) {
             $urlGenerator = $this->app->make('url');
             $request = $this->app->make('request');
 

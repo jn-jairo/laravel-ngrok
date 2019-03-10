@@ -114,7 +114,7 @@ class NgrokCommand extends Command
         $tunnelStarted = false;
 
         $process->run(function ($type, $data) use (&$process, &$webService, &$webServiceStarted, &$tunnelStarted) {
-            if (!$webServiceStarted) {
+            if (! $webServiceStarted) {
                 if (preg_match('/msg="starting web service".*? addr=(?<addr>\S+)/', $process->getOutput(), $matches)) {
                     $webServiceStarted = true;
 
@@ -126,10 +126,10 @@ class NgrokCommand extends Command
                 }
             }
 
-            if ($webServiceStarted && !$tunnelStarted) {
+            if ($webServiceStarted && ! $tunnelStarted) {
                 $tunnels = $webService->getTunnels();
 
-                if (!empty($tunnels)) {
+                if (! empty($tunnels)) {
                     $tunnelStarted = true;
 
                     foreach ($tunnels as $tunnel) {

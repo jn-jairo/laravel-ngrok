@@ -87,7 +87,7 @@ class NgrokWebService
             true
         );
 
-        if ($response !== false && isset($response['tunnels']) && !empty($response['tunnels'])) {
+        if ($response !== false && isset($response['tunnels']) && ! empty($response['tunnels'])) {
             $tunnels = $response['tunnels'];
         }
 
