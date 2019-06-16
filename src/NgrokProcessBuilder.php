@@ -54,10 +54,10 @@ class NgrokProcessBuilder
         $command = 'ngrok http --log stdout';
 
         if ($host !== '') {
-            $command .= ' --host-header=' . ProcessUtils::escapeArgument($host);
+            $command .= ' --host-header=rewrite ' . ProcessUtils::escapeArgument($host);
         }
 
-        $command .= ' ' .  ProcessUtils::escapeArgument($port ?: '80');
+        $command .= ':' .  ProcessUtils::escapeArgument($port ?: '80');
 
         return new Process($command, $this->getWorkingDirectory(), null, null, null);
     }
