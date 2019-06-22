@@ -1,9 +1,3 @@
----
-name: New feature
-about: A new feature for this project
-
----
-
 <!--
 Pull requests without a descriptive title, thorough description, or tests will be closed.
 -->

@@ -1,9 +1,3 @@
----
-name: Not reported bug fix
-about: Fix for issues not already reported
-
----
-
 <!--
 Pull requests without a descriptive title, thorough description, or tests will be closed.
 -->
