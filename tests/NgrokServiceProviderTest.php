@@ -6,8 +6,10 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator;
+use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
 use JnJairo\Laravel\Ngrok\NgrokServiceProvider;
-use JnJairo\Laravel\Ngrok\Tests\TestCase;
+use JnJairo\Laravel\Ngrok\NgrokWebService;
+use JnJairo\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
 
 /**
  * @testdox Ngrok service provider
@@ -114,5 +116,14 @@ class NgrokServiceProviderTest extends TestCase
 
         $serviceProvider = new NgrokServiceProvider($app->reveal());
         $serviceProvider->boot();
+    }
+
+    public function test_register_bind() : void
+    {
+        $processBuilder = app(NgrokProcessBuilder::class);
+        $this->assertInstanceOf(NgrokProcessBuilder::class, $processBuilder, 'Bind ' . NgrokProcessBuilder::class);
+
+        $webService = app(NgrokWebService::class);
+        $this->assertInstanceOf(NgrokWebService::class, $webService, 'Bind ' . NgrokWebService::class);
     }
 }

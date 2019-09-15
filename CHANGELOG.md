@@ -1,6 +1,16 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.3...master)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.4...master)
+
+## [v0.0.4 (2019-09-14)](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.3...v0.0.4)
+
+### Added
+- Laravel 6 support
+- Test using [orchestral/testbench](https://github.com/orchestral/testbench)
+
+### Changed
+- Minimal PHP version 7.2
+- Minimal Laravel version 5.8
 
 ## [v0.0.3 (2019-03-02)](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.2...v0.0.3)
 

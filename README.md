@@ -9,7 +9,7 @@ This package allows you to share your Laravel application with [ngrok](https://n
 
 ## Requirements
 
-- Laravel Framework >= 5.5.28
+- Laravel Framework >= 5.8
 - Ngrok >= 2.2.8 (If you are using [Laravel Homestead](https://laravel.com/docs/homestead) this should be already installed)
 
 ## Installation

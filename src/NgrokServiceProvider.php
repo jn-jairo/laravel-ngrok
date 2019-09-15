@@ -31,8 +31,6 @@ class NgrokServiceProvider extends ServiceProvider
      * Register the application services.
      *
      * @return void
-     *
-     * @codeCoverageIgnore
      */
     public function register() : void
     {
