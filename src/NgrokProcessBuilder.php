@@ -2,7 +2,6 @@
 
 namespace JnJairo\Laravel\Ngrok;
 
-use Illuminate\Support\ProcessUtils;
 use Symfony\Component\Process\Process;
 
 class NgrokProcessBuilder
@@ -51,13 +50,14 @@ class NgrokProcessBuilder
      */
     public function buildProcess(string $host = '', string $port = '80') : Process
     {
-        $command = 'ngrok http --log stdout';
+        $command = ['ngrok', 'http', '--log', 'stdout'];
 
         if ($host !== '') {
-            $command .= ' --host-header=' . ProcessUtils::escapeArgument($host);
+            $command[] = '--host-header';
+            $command[] = $host;
         }
 
-        $command .= ' ' .  ProcessUtils::escapeArgument($port ?: '80');
+        $command[] = $port ?: '80';
 
         return new Process($command, $this->getWorkingDirectory(), null, null, null);
     }

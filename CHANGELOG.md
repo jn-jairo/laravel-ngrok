@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.4...master)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.5...master)
+
+## [v0.0.5 (2020-03-08)](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.4...v0.0.5)
+
+### Added
+- Laravel 7 support
 
 ## [v0.0.4 (2019-09-14)](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.3...v0.0.4)
 

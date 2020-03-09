@@ -18,7 +18,7 @@ class NgrokProcessBuilderTest extends TestCase
 
         $this->assertInstanceOf(Process::class, $process);
 
-        $this->assertSame('ngrok http --log stdout \'80\'', $process->getCommandLine());
+        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'', $process->getCommandLine());
         $this->assertSame(__DIR__, $process->getWorkingDirectory());
         $this->assertNull($process->getTimeout());
     }
@@ -30,7 +30,7 @@ class NgrokProcessBuilderTest extends TestCase
 
         $this->assertInstanceOf(Process::class, $process);
 
-        $this->assertSame('ngrok http --log stdout --host-header=\'example.com\' \'80\'', $process->getCommandLine());
+        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'80\'', $process->getCommandLine());
         $this->assertSame(__DIR__, $process->getWorkingDirectory());
         $this->assertNull($process->getTimeout());
     }
@@ -42,7 +42,7 @@ class NgrokProcessBuilderTest extends TestCase
 
         $this->assertInstanceOf(Process::class, $process);
 
-        $this->assertSame('ngrok http --log stdout --host-header=\'example.com\' \'8000\'', $process->getCommandLine());
+        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'8000\'', $process->getCommandLine());
         $this->assertSame(__DIR__, $process->getWorkingDirectory());
         $this->assertNull($process->getTimeout());
     }
@@ -54,7 +54,7 @@ class NgrokProcessBuilderTest extends TestCase
 
         $this->assertInstanceOf(Process::class, $process);
 
-        $this->assertSame('ngrok http --log stdout --host-header=\'example.com\' \'80\'', $process->getCommandLine());
+        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'80\'', $process->getCommandLine());
         $this->assertSame(__DIR__, $process->getWorkingDirectory());
         $this->assertNull($process->getTimeout());
     }
@@ -66,7 +66,7 @@ class NgrokProcessBuilderTest extends TestCase
 
         $this->assertInstanceOf(Process::class, $process);
 
-        $this->assertSame('ngrok http --log stdout \'80\'', $process->getCommandLine());
+        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'', $process->getCommandLine());
         $this->assertSame(__DIR__, $process->getWorkingDirectory());
         $this->assertNull($process->getTimeout());
     }
@@ -78,7 +78,7 @@ class NgrokProcessBuilderTest extends TestCase
 
         $this->assertInstanceOf(Process::class, $process);
 
-        $this->assertSame('ngrok http --log stdout \'80\'', $process->getCommandLine());
+        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'', $process->getCommandLine());
         $this->assertSame(__DIR__, $process->getWorkingDirectory());
         $this->assertNull($process->getTimeout());
     }
