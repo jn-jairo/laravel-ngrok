@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": "^7.2",
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^6.3|^7.0",
         "illuminate/console": "^5.8|^6.0|^7.0",
         "illuminate/http": "^5.8|^6.0|^7.0",
         "illuminate/pagination": "^5.8|^6.0|^7.0",
