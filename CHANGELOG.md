@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v1.0.0...master)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v1.0.1...master)
+
+## [v1.0.1 (2020-08-13)](https://github.com/jn-jairo/laravel-ngrok/compare/v1.0.0...v1.0.1)
+
+### Added
+- Travis PHP 7.4
 
 ## [v1.0.0 (2020-03-08)](https://github.com/jn-jairo/laravel-ngrok/compare/v0.0.4...v1.0.0)
 
