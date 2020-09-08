@@ -1,6 +1,6 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
+namespace Apility\Laravel\Ngrok\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 

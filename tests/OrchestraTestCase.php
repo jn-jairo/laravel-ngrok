@@ -1,8 +1,8 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
+namespace Apility\Laravel\Ngrok\Tests;
 
-use JnJairo\Laravel\Ngrok\NgrokServiceProvider;
+use Apility\Laravel\Ngrok\NgrokServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class OrchestraTestCase extends BaseTestCase

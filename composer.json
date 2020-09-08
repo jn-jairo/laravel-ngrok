@@ -1,20 +1,24 @@
 {
-    "name": "jn-jairo/laravel-ngrok",
+    "name": "apility/laravel-ngrok",
     "description": "Share Laravel application with ngrok.",
     "keywords": [
-        "jn-jairo",
+        "apility",
         "laravel-ngrok"
     ],
-    "homepage": "https://github.com/jn-jairo/laravel-ngrok",
+    "homepage": "https://github.com/apility/laravel-ngrok",
     "license": "MIT",
     "authors": [
         {
             "name": "Jairo Correa",
             "email": "jn.j41r0@gmail.com"
+        },
+        {
+            "name": "Thomas Alrek",
+            "email": "thomas@apility.no"
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.3",
         "guzzlehttp/guzzle": "^6.3|^7.0",
         "illuminate/console": "^5.8|^6.0|^7.0|^8.0",
         "illuminate/http": "^5.8|^6.0|^7.0|^8.0",
@@ -25,16 +29,16 @@
     },
     "require-dev": {
         "orchestra/testbench": "^3.8|^4.0|^5.0",
-        "phpunit/phpunit": "^8.3"
+        "phpunit/phpunit": "^8.3|^9.0"
     },
     "autoload": {
         "psr-4": {
-            "JnJairo\\Laravel\\Ngrok\\": "src"
+            "Apility\\Laravel\\Ngrok\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "JnJairo\\Laravel\\Ngrok\\Tests\\": "tests"
+            "Apility\\Laravel\\Ngrok\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -46,7 +50,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "JnJairo\\Laravel\\Ngrok\\NgrokServiceProvider"
+                "Apility\\Laravel\\Ngrok\\NgrokServiceProvider"
             ]
         }
     }

@@ -1,11 +1,11 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
+namespace Apility\Laravel\Ngrok\Tests;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use JnJairo\Laravel\Ngrok\NgrokWebService;
-use JnJairo\Laravel\Ngrok\Tests\TestCase;
+use Apility\Laravel\Ngrok\NgrokWebService;
+use Apility\Laravel\Ngrok\Tests\TestCase;
 
 /**
  * @testdox Ngrok web service

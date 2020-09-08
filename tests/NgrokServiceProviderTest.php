@@ -1,15 +1,15 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
+namespace Apility\Laravel\Ngrok\Tests;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator;
-use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
-use JnJairo\Laravel\Ngrok\NgrokServiceProvider;
-use JnJairo\Laravel\Ngrok\NgrokWebService;
-use JnJairo\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
+use Apility\Laravel\Ngrok\NgrokProcessBuilder;
+use Apility\Laravel\Ngrok\NgrokServiceProvider;
+use Apility\Laravel\Ngrok\NgrokWebService;
+use Apility\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
 
 /**
  * @testdox Ngrok service provider

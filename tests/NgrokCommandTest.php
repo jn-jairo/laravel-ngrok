@@ -1,10 +1,10 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
+namespace Apility\Laravel\Ngrok\Tests;
 
-use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
-use JnJairo\Laravel\Ngrok\NgrokWebService;
-use JnJairo\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
+use Apility\Laravel\Ngrok\NgrokProcessBuilder;
+use Apility\Laravel\Ngrok\NgrokWebService;
+use Apility\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
 use Symfony\Component\Process\Process;
 
 /**

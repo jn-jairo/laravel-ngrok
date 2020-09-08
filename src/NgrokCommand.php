@@ -1,10 +1,10 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok;
+namespace Apility\Laravel\Ngrok;
 
 use Illuminate\Console\Command;
-use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
-use JnJairo\Laravel\Ngrok\NgrokWebService;
+use Apility\Laravel\Ngrok\NgrokProcessBuilder;
+use Apility\Laravel\Ngrok\NgrokWebService;
 use Symfony\Component\Process\Process;
 
 class NgrokCommand extends Command

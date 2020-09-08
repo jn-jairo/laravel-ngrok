@@ -1,9 +1,9 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
+namespace Apility\Laravel\Ngrok\Tests;
 
-use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
-use JnJairo\Laravel\Ngrok\Tests\TestCase;
+use Apility\Laravel\Ngrok\NgrokProcessBuilder;
+use Apility\Laravel\Ngrok\Tests\TestCase;
 use Symfony\Component\Process\Process;
 
 /**

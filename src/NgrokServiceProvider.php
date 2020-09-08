@@ -1,14 +1,17 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok;
+namespace Apility\Laravel\Ngrok;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\ServiceProvider;
-use JnJairo\Laravel\Ngrok\NgrokCommand;
-use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
-use JnJairo\Laravel\Ngrok\NgrokWebService;
+
+use Apility\Laravel\Ngrok\NgrokCommand;
+use Apility\Laravel\Ngrok\NgrokProcessBuilder;
+use Apility\Laravel\Ngrok\NgrokWebService;
+
+use GuzzleHttp\Client;
 
 class NgrokServiceProvider extends ServiceProvider
 {
@@ -39,7 +42,7 @@ class NgrokServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(NgrokWebService::class, function () {
-            return new NgrokWebService(new \GuzzleHttp\Client());
+            return new NgrokWebService(new Client());
         });
 
         $this->commands([

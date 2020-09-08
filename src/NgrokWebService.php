@@ -1,6 +1,6 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok;
+namespace Apility\Laravel\Ngrok;
 
 use GuzzleHttp\Client;
 
