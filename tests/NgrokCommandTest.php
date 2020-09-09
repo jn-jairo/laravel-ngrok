@@ -5,6 +5,7 @@ namespace JnJairo\Laravel\Ngrok\Tests;
 use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
 use JnJairo\Laravel\Ngrok\NgrokWebService;
 use JnJairo\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Process\Process;
 
 /**
@@ -12,6 +13,8 @@ use Symfony\Component\Process\Process;
  */
 class NgrokCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function test_handle() : void
     {
         $host = 'example.com';

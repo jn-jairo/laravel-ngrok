@@ -10,12 +10,15 @@ use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
 use JnJairo\Laravel\Ngrok\NgrokServiceProvider;
 use JnJairo\Laravel\Ngrok\NgrokWebService;
 use JnJairo\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @testdox Ngrok service provider
  */
 class NgrokServiceProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function test_boot_valid_ngrok_url() : void
     {
         $urlGenerator = $this->prophesize(UrlGenerator::class);

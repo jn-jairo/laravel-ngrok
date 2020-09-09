@@ -6,12 +6,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use JnJairo\Laravel\Ngrok\NgrokWebService;
 use JnJairo\Laravel\Ngrok\Tests\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @testdox Ngrok web service
  */
 class NgrokWebServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function test_get_tunnels() : void
     {
         $tunnels = [
