@@ -7,6 +7,7 @@ use GuzzleHttp\Psr7\Response;
 use JnJairo\Laravel\Ngrok\NgrokWebService;
 use JnJairo\Laravel\Ngrok\Tests\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * @testdox Ngrok web service
@@ -28,8 +29,11 @@ class NgrokWebServiceTest extends TestCase
             ],
         ];
 
+        $stream = $this->prophesize(StreamInterface::class);
+        $stream->__toString()->willReturn(json_encode(['tunnels' => $tunnels]))->shouldBeCalled();
+
         $response = $this->prophesize(Response::class);
-        $response->getBody()->willReturn(json_encode(['tunnels' => $tunnels]))->shouldBeCalled();
+        $response->getBody()->willReturn($stream->reveal())->shouldBeCalled();
 
         $httpClient = $this->prophesize(Client::class);
         $httpClient->request(
@@ -47,8 +51,11 @@ class NgrokWebServiceTest extends TestCase
     {
         $tunnels = [];
 
+        $stream = $this->prophesize(StreamInterface::class);
+        $stream->__toString()->willReturn(json_encode(['tunnels' => $tunnels]))->shouldBeCalled();
+
         $response = $this->prophesize(Response::class);
-        $response->getBody()->willReturn(json_encode(['tunnels' => $tunnels]))->shouldBeCalled();
+        $response->getBody()->willReturn($stream->reveal())->shouldBeCalled();
 
         $httpClient = $this->prophesize(Client::class);
         $httpClient->request(
@@ -66,8 +73,11 @@ class NgrokWebServiceTest extends TestCase
     {
         $tunnels = [];
 
+        $stream = $this->prophesize(StreamInterface::class);
+        $stream->__toString()->willReturn('')->shouldBeCalled();
+
         $response = $this->prophesize(Response::class);
-        $response->getBody()->willReturn('')->shouldBeCalled();
+        $response->getBody()->willReturn($stream->reveal())->shouldBeCalled();
 
         $httpClient = $this->prophesize(Client::class);
         $httpClient->request(
