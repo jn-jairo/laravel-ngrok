@@ -20,12 +20,12 @@ class NgrokServiceProviderTest extends TestCase
     {
         $urlGenerator = $this->prophesize(UrlGenerator::class);
         $urlGenerator->forceScheme('http')->shouldBeCalled();
-        $urlGenerator->forceRootUrl('http://00000000.ngrok.io')->shouldBeCalled();
+        $urlGenerator->forceRootUrl('http://0000-0000.ngrok.io')->shouldBeCalled();
         $urlGenerator->to(
             'foo',
             \Prophecy\Argument::any(),
             \Prophecy\Argument::any()
-        )->willReturn('http://00000000.ngrok.io/foo')->shouldBeCalled();
+        )->willReturn('http://0000-0000.ngrok.io/foo')->shouldBeCalled();
 
         $request = Request::create(
             'http://example.com/foo',
@@ -34,7 +34,7 @@ class NgrokServiceProviderTest extends TestCase
             [],
             [],
             [
-                'HTTP_X_ORIGINAL_HOST' => '00000000.ngrok.io',
+                'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
             ]
         );
 
@@ -46,19 +46,19 @@ class NgrokServiceProviderTest extends TestCase
         $serviceProvider = new NgrokServiceProvider($app->reveal());
         $serviceProvider->boot();
 
-        $this->assertSame('http://00000000.ngrok.io/foo', Paginator::resolveCurrentPath());
+        $this->assertSame('http://0000-0000.ngrok.io/foo', Paginator::resolveCurrentPath());
     }
 
     public function test_boot_valid_secure_ngrok_url() : void
     {
         $urlGenerator = $this->prophesize(UrlGenerator::class);
         $urlGenerator->forceScheme('https')->shouldBeCalled();
-        $urlGenerator->forceRootUrl('https://00000000.ngrok.io')->shouldBeCalled();
+        $urlGenerator->forceRootUrl('https://0000-0000.ngrok.io')->shouldBeCalled();
         $urlGenerator->to(
             'foo',
             \Prophecy\Argument::any(),
             \Prophecy\Argument::any()
-        )->willReturn('https://00000000.ngrok.io/foo')->shouldBeCalled();
+        )->willReturn('https://0000-0000.ngrok.io/foo')->shouldBeCalled();
 
         $request = Request::create(
             'https://example.com/foo',
@@ -67,7 +67,7 @@ class NgrokServiceProviderTest extends TestCase
             [],
             [],
             [
-                'HTTP_X_ORIGINAL_HOST' => '00000000.ngrok.io',
+                'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
                 'HTTP_X_FORWARDED_PROTO' => 'https',
             ]
         );
@@ -80,7 +80,7 @@ class NgrokServiceProviderTest extends TestCase
         $serviceProvider = new NgrokServiceProvider($app->reveal());
         $serviceProvider->boot();
 
-        $this->assertSame('https://00000000.ngrok.io/foo', Paginator::resolveCurrentPath());
+        $this->assertSame('https://0000-0000.ngrok.io/foo', Paginator::resolveCurrentPath());
     }
 
     public function test_boot_not_ngrok_url() : void

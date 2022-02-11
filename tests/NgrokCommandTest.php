@@ -21,11 +21,11 @@ class NgrokCommandTest extends TestCase
 
         $tunnels = [
             [
-                'public_url' => 'http://00000000.ngrok.io',
+                'public_url' => 'http://0000-0000.ngrok.io',
                 'config' => ['addr' => 'localhost:80'],
             ],
             [
-                'public_url' => 'https://00000000.ngrok.io',
+                'public_url' => 'https://0000-0000.ngrok.io',
                 'config' => ['addr' => 'localhost:80'],
             ],
         ];
@@ -39,11 +39,11 @@ class NgrokCommandTest extends TestCase
             $callback = $args[0];
 
             $process->getOutput()->willReturn('msg="starting web service" addr=127.0.0.1:4040')->shouldBeCalled();
-            $process->clearOutput()->shouldBeCalled();
+            $process->clearOutput()->willReturn($process)->shouldBeCalled();
 
             $callback(Process::OUT, 'msg="starting web service" addr=127.0.0.1:4040');
 
-            $process->clearErrorOutput()->shouldBeCalled();
+            $process->clearErrorOutput()->willReturn($process)->shouldBeCalled();
 
             $callback(Process::ERR, 'error');
 
@@ -73,11 +73,11 @@ class NgrokCommandTest extends TestCase
 
         $tunnels = [
             [
-                'public_url' => 'http://00000000.ngrok.io',
+                'public_url' => 'http://0000-0000.ngrok.io',
                 'config' => ['addr' => 'localhost:8000'],
             ],
             [
-                'public_url' => 'https://00000000.ngrok.io',
+                'public_url' => 'https://0000-0000.ngrok.io',
                 'config' => ['addr' => 'localhost:8000'],
             ],
         ];
@@ -91,11 +91,11 @@ class NgrokCommandTest extends TestCase
             $callback = $args[0];
 
             $process->getOutput()->willReturn('msg="starting web service" addr=127.0.0.1:4040')->shouldBeCalled();
-            $process->clearOutput()->shouldBeCalled();
+            $process->clearOutput()->willReturn($process)->shouldBeCalled();
 
             $callback(Process::OUT, 'msg="starting web service" addr=127.0.0.1:4040');
 
-            $process->clearErrorOutput()->shouldBeCalled();
+            $process->clearErrorOutput()->willReturn($process)->shouldBeCalled();
 
             $callback(Process::ERR, 'error');
 
@@ -125,11 +125,11 @@ class NgrokCommandTest extends TestCase
 
         $tunnels = [
             [
-                'public_url' => 'http://00000000.ngrok.io',
+                'public_url' => 'http://0000-0000.ngrok.io',
                 'config' => ['addr' => 'localhost:8000'],
             ],
             [
-                'public_url' => 'https://00000000.ngrok.io',
+                'public_url' => 'https://0000-0000.ngrok.io',
                 'config' => ['addr' => 'localhost:8000'],
             ],
         ];

@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v1.0.1...1.x)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v1.0.2...1.x)
+
+## [v1.0.2 (2022-02-11)](https://github.com/jn-jairo/laravel-ngrok/compare/v1.0.1...v1.0.2)
+
+### Added
+- New ngrok url format
 
 ## [v1.0.1 (2020-08-13)](https://github.com/jn-jairo/laravel-ngrok/compare/v1.0.0...v1.0.1)
 
