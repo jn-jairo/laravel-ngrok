@@ -1,6 +1,12 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.1...2.x)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.2...2.x)
+
+## [v2.0.2 (2022-02-11)](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.1...v2.0.2)
+
+### Added
+- Laravel 9 support
+- New ngrok url format
 
 ## [v2.0.1 (2021-09-01)](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.0...v2.0.1)
 

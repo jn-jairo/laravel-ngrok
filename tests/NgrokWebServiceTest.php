@@ -20,11 +20,11 @@ class NgrokWebServiceTest extends TestCase
     {
         $tunnels = [
             [
-                'public_url' => 'http://00000000.ngrok.io',
+                'public_url' => 'http://0000-0000.ngrok.io',
                 'config' => ['addr' => 'localhost:80'],
             ],
             [
-                'public_url' => 'https://00000000.ngrok.io',
+                'public_url' => 'https://0000-0000.ngrok.io',
                 'config' => ['addr' => 'localhost:80'],
             ],
         ];

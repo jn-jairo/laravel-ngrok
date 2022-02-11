@@ -15,19 +15,19 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
-        "guzzlehttp/guzzle": "^6.3|^7.0|^8.0",
-        "illuminate/console": "^6.0|^7.0|^8.0",
-        "illuminate/http": "^6.0|^7.0|^8.0",
-        "illuminate/pagination": "^6.0|^7.0|^8.0",
-        "illuminate/routing": "^6.0|^7.0|^8.0",
-        "illuminate/support": "^6.0|^7.0|^8.0",
-        "symfony/process": "^4.0|^5.0"
+        "guzzlehttp/guzzle": "^6.3|^7.0",
+        "illuminate/console": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/http": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/pagination": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/routing": "^6.0|^7.0|^8.0|^9.0",
+        "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
+        "symfony/process": "^4.0|^5.0|^6.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^4.0|^5.0|^6.0",
-        "phpspec/prophecy": "^1.11",
+        "orchestra/testbench": "^4.0|^5.0|^6.0|^7.0",
+        "phpspec/prophecy": "^1.15",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
@@ -40,7 +40,8 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit"
     },
     "config": {
         "sort-packages": true
