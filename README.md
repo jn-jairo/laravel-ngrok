@@ -41,10 +41,48 @@ php artisan ngrok
 
 The parameters for ngrok will be extracted from your application.
 
-You can also pass custom host and port.
+## Advanced usage
 
 ```bash
-php artisan ngrok example.com --port=8000
+php artisan ngrok [options] [--] [<host-header>]
+```
+
+ Argument        | Description
+:----------------|:------------------------------------------------------
+ **host-header** | Host header to identify the app (Example: myapp.test)
+
+ Option                  | Description
+:------------------------|:-----------------------------------------------------------
+ **-H, --host[=HOST]**   | Host to tunnel the requests (default: localhost)
+ **-P, --port[=PORT]**   | Port to tunnel the requests (default: 80)
+ **-E, --extra[=EXTRA]** | Extra arguments to ngrok command (multiple values allowed)
+
+
+## Examples
+
+```bash
+# If you have multiples apps (myapp.test, my-other-app.test, ...)
+# set it in the app.url configuration
+# or pass it in the host-header argument
+
+php artisan ngrok myapp.test
+
+# If you use a different port, set it in the app.url configuration
+# or pass it in the --port option
+
+php artisan ngrok --port=8000 myapp.test
+
+# If you use docker and have containers like (nginx, php, workspace)
+# and wanna run the command inside the workspace container
+# pass the name of the container the requests will tunnel through
+
+php artisan ngrok --host=nginx example.com
+
+# If you wanna pass other arguments directly to ngrok
+# use the --extra or -E option
+
+php artisan ngrok --extra='--region=eu' -E'--config=ngrok.yml'
+
 ```
 
 ## License

@@ -11,74 +11,75 @@ use Symfony\Component\Process\Process;
  */
 class NgrokProcessBuilderTest extends TestCase
 {
-    public function test_build_process_default() : void
+    public function buildProcessProvider() : array
     {
-        $processBuilder = new NgrokProcessBuilder(__DIR__);
-        $process = $processBuilder->buildProcess();
-
-        $this->assertInstanceOf(Process::class, $process);
-
-        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'', $process->getCommandLine());
-        $this->assertSame(__DIR__, $process->getWorkingDirectory());
-        $this->assertNull($process->getTimeout());
+        return [
+            'default' => [
+                [],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'',
+            ],
+            'host_header' => [
+                ['example.com'],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'80\'',
+            ],
+            'host_header_port' => [
+                ['example.com', '8000'],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'8000\'',
+            ],
+            'host_header_port_host' => [
+                ['example.com', '8000', 'nginx'],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'nginx:8000\'',
+            ],
+            'host_header_empty_port' => [
+                ['example.com', ''],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'80\'',
+            ],
+            'host_header_empty_port_empty_host' => [
+                ['example.com', '', ''],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'80\'',
+            ],
+            'host_header_empty_port_host' => [
+                ['example.com', '', 'nginx'],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'nginx:80\'',
+            ],
+            'empty_host_header_emtpy_port_host' => [
+                ['', '', 'nginx'],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'nginx:80\'',
+            ],
+            'empty_host_header' => [
+                [''],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'',
+            ],
+            'empty_host_header_emtpy_port' => [
+                ['', ''],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'',
+            ],
+            'empty_host_header_emtpy_port_empty_host' => [
+                ['', '', ''],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'',
+            ],
+            'extra_single' => [
+                ['example.com', '', '', ['--region=eu']],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--region=eu\' \'--host-header\' \'example.com\' \'80\'',
+            ],
+            'extra_multiple' => [
+                ['example.com', '', '', ['--region=eu', '--config=../ngrok.yml']],
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--region=eu\' \'--config=../ngrok.yml\' \'--host-header\' \'example.com\' \'80\'',
+            ],
+        ];
     }
 
-    public function test_build_process_host() : void
+    /**
+     * @dataProvider buildProcessProvider
+     */
+    public function test_build_process(array $args, string $command) : void
     {
         $processBuilder = new NgrokProcessBuilder(__DIR__);
-        $process = $processBuilder->buildProcess('example.com');
+        $process = $processBuilder->buildProcess(...$args);
 
         $this->assertInstanceOf(Process::class, $process);
 
-        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'80\'', $process->getCommandLine());
-        $this->assertSame(__DIR__, $process->getWorkingDirectory());
-        $this->assertNull($process->getTimeout());
-    }
-
-    public function test_build_process_host_port() : void
-    {
-        $processBuilder = new NgrokProcessBuilder(__DIR__);
-        $process = $processBuilder->buildProcess('example.com', '8000');
-
-        $this->assertInstanceOf(Process::class, $process);
-
-        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'8000\'', $process->getCommandLine());
-        $this->assertSame(__DIR__, $process->getWorkingDirectory());
-        $this->assertNull($process->getTimeout());
-    }
-
-    public function test_build_process_host_empty_port() : void
-    {
-        $processBuilder = new NgrokProcessBuilder(__DIR__);
-        $process = $processBuilder->buildProcess('example.com', '');
-
-        $this->assertInstanceOf(Process::class, $process);
-
-        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'--host-header\' \'example.com\' \'80\'', $process->getCommandLine());
-        $this->assertSame(__DIR__, $process->getWorkingDirectory());
-        $this->assertNull($process->getTimeout());
-    }
-
-    public function test_build_process_empty_host() : void
-    {
-        $processBuilder = new NgrokProcessBuilder(__DIR__);
-        $process = $processBuilder->buildProcess('');
-
-        $this->assertInstanceOf(Process::class, $process);
-
-        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'', $process->getCommandLine());
-        $this->assertSame(__DIR__, $process->getWorkingDirectory());
-        $this->assertNull($process->getTimeout());
-    }
-
-    public function test_build_process_empty_host_emtpy_port() : void
-    {
-        $processBuilder = new NgrokProcessBuilder(__DIR__);
-        $process = $processBuilder->buildProcess('', '');
-
-        $this->assertInstanceOf(Process::class, $process);
-
-        $this->assertSame('\'ngrok\' \'http\' \'--log\' \'stdout\' \'80\'', $process->getCommandLine());
+        $this->assertSame($command, $process->getCommandLine());
         $this->assertSame(__DIR__, $process->getWorkingDirectory());
         $this->assertNull($process->getTimeout());
     }

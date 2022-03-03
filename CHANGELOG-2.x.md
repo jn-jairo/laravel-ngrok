@@ -1,6 +1,12 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.2...2.x)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.3...2.x)
+
+## [v2.0.3 (2022-03-03)](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.2...v2.0.3)
+
+### Added
+- `--host` and `--extra` options
+- Allow ngrok url with region
 
 ## [v2.0.2 (2022-02-11)](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.1...v2.0.2)
 

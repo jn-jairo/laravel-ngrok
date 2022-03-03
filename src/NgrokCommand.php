@@ -15,8 +15,10 @@ class NgrokCommand extends Command
      * @var string
      */
     protected $signature = 'ngrok
-                            {host? : The host to share}
-                            {--port= : The port to share}';
+                            {host-header? : Host header to identify the app (Example: myapp.test)}
+                            {--H|host= : Host to tunnel the requests (default: localhost)}
+                            {--P|port= : Port to tunnel the requests (default: 80)}
+                            {--E|extra=* : Extra arguments to ngrok command}';
 
     /**
      * The console command description.
@@ -58,17 +60,19 @@ class NgrokCommand extends Command
      */
     public function handle() : int
     {
-        $host = $this->argument('host');
+        $hostHeader = $this->argument('host-header');
+        $host = $this->option('host');
         $port = $this->option('port');
+        $extra = $this->option('extra');
 
-        if ($host === null) {
+        if ($hostHeader === null) {
             $url = $this->getLaravel()->make('config')->get('app.url');
 
             $urlParsed = parse_url($url);
 
             if ($urlParsed !== false) {
                 if (isset($urlParsed['host'])) {
-                    $host = $urlParsed['host'];
+                    $hostHeader = $urlParsed['host'];
                 }
 
                 if (isset($urlParsed['port']) && $port === null) {
@@ -77,11 +81,12 @@ class NgrokCommand extends Command
             }
         }
 
-        if (empty($host)) {
-            $this->error('Invalid host');
+        if (empty($hostHeader)) {
+            $this->error('Invalid host header');
             return 1;
         }
 
+        $host = $host ?: 'localhost';
         $port = $port ?: '80';
 
         $this->line('-----------------');
@@ -90,12 +95,17 @@ class NgrokCommand extends Command
 
         $this->line('');
 
+        $this->line('<fg=green>Host header: </fg=green>' . $hostHeader);
         $this->line('<fg=green>Host: </fg=green>' . $host);
         $this->line('<fg=green>Port: </fg=green>' . $port);
 
+        if (! empty($extra)) {
+            $this->line('<fg=green>Extra: </fg=green>' . implode(' ', $extra));
+        }
+
         $this->line('');
 
-        $process = $this->processBuilder->buildProcess($host, $port);
+        $process = $this->processBuilder->buildProcess($hostHeader, $port, $host, $extra);
 
         return $this->runProcess($process);
     }
@@ -129,7 +139,7 @@ class NgrokCommand extends Command
             if ($webServiceStarted && ! $tunnelStarted) {
                 $tunnels = $webService->getTunnels();
 
-                if (! empty($tunnels)) {
+                if (! empty($tunnels) && count($tunnels) > 1) {
                     $tunnelStarted = true;
 
                     foreach ($tunnels as $tunnel) {
