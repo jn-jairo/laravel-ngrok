@@ -1,0 +1,44 @@
+version: 2.1
+
+jobs:
+  build:
+    parameters:
+      php_version:
+        type: string
+      dependency:
+        type: string
+        default: stable
+
+    docker:
+      - image: cimg/php:<< parameters.php_version >>
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - composer-v1-{{ .Branch }}-{{ checksum "composer.json" }}
+            - composer-v1-{{ .Branch }}-
+
+      - run: composer update -n --prefer-dist --prefer-stable --prefer-<< parameters.dependency >>
+
+      - save_cache:
+          key: composer-v1-{{ .Branch }}-{{ checksum "composer.json" }}
+          paths:
+            - ~/.cache/composer
+
+      - run: ./vendor/bin/phpunit
+
+workflows:
+  workflow:
+    jobs:
+      - build:
+          name: build-<< matrix.php_version >>-<< matrix.dependency >>
+          matrix:
+            parameters:
+              php_version: ["7.2", "7.3", "7.4"]
+              dependency: ["stable", "lowest"]
+            exclude:
+              - php_version: "7.4"
+                dependency: "lowest"
+
