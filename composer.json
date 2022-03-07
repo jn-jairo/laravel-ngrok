@@ -41,7 +41,8 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit"
+        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit",
+        "test-stable": "for version in 7.3 7.4 8.0 8.1 ; do if command -v php${version} > /dev/null 2>&1 ; then echo '\nPHP: '${version}'\n' && php${version} $(which composer) update --prefer-dist --no-interaction --prefer-stable > /dev/null 2>&1 && php${version} vendor/bin/phpunit ; fi ; done"
     },
     "config": {
         "sort-packages": true
