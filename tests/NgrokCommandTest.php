@@ -58,7 +58,10 @@ class NgrokCommandTest extends TestCase
         $process->getExitCode()->willReturn(0)->shouldBeCalled();
 
         $processBuilder = $this->prophesize(NgrokProcessBuilder::class);
-        $processBuilder->buildProcess($hostHeader, $port, $host, $extra)->willReturn($process->reveal())->shouldBeCalled();
+        $processBuilder
+            ->buildProcess($hostHeader, $port, $host, $extra)
+            ->willReturn($process->reveal())
+            ->shouldBeCalled();
 
         app()->instance(NgrokWebService::class, $webService->reveal());
         app()->instance(NgrokProcessBuilder::class, $processBuilder->reveal());
@@ -118,7 +121,10 @@ class NgrokCommandTest extends TestCase
         $process->getExitCode()->willReturn(0)->shouldBeCalled();
 
         $processBuilder = $this->prophesize(NgrokProcessBuilder::class);
-        $processBuilder->buildProcess($hostHeader, $port, $host, $extra)->willReturn($process->reveal())->shouldBeCalled();
+        $processBuilder
+            ->buildProcess($hostHeader, $port, $host, $extra)
+            ->willReturn($process->reveal())
+            ->shouldBeCalled();
 
         app()->instance(NgrokWebService::class, $webService->reveal());
         app()->instance(NgrokProcessBuilder::class, $processBuilder->reveal());
@@ -179,7 +185,10 @@ class NgrokCommandTest extends TestCase
         $process->getExitCode()->willReturn(0)->shouldBeCalled();
 
         $processBuilder = $this->prophesize(NgrokProcessBuilder::class);
-        $processBuilder->buildProcess($hostHeader, $port, $host, $extra)->willReturn($process->reveal())->shouldBeCalled();
+        $processBuilder
+            ->buildProcess($hostHeader, $port, $host, $extra)
+            ->willReturn($process->reveal())
+            ->shouldBeCalled();
 
         app()->instance(NgrokWebService::class, $webService->reveal());
         app()->instance(NgrokProcessBuilder::class, $processBuilder->reveal());
@@ -221,7 +230,10 @@ class NgrokCommandTest extends TestCase
         $process->getExitCode()->willReturn(0)->shouldNotBeCalled();
 
         $processBuilder = $this->prophesize(NgrokProcessBuilder::class);
-        $processBuilder->buildProcess($hostHeader, $port, $host, $extra)->willReturn($process->reveal())->shouldNotBeCalled();
+        $processBuilder
+            ->buildProcess($hostHeader, $port, $host, $extra)
+            ->willReturn($process->reveal())
+            ->shouldNotBeCalled();
 
         app()->instance(NgrokWebService::class, $webService->reveal());
         app()->instance(NgrokProcessBuilder::class, $processBuilder->reveal());

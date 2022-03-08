@@ -64,7 +64,8 @@ class NgrokProcessBuilderTest extends TestCase
             ],
             'extra_multiple' => [
                 ['example.com', '', '', ['--region=eu', '--config=../ngrok.yml']],
-                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--region=eu\' \'--config=../ngrok.yml\' \'--host-header\' \'example.com\' \'80\'',
+                '\'ngrok\' \'http\' \'--log\' \'stdout\' \'--region=eu\''
+                . ' \'--config=../ngrok.yml\' \'--host-header\' \'example.com\' \'80\'',
             ],
         ];
     }
