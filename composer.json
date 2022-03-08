@@ -25,7 +25,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^3.8|^4.0|^5.0",
-        "phpunit/phpunit": "^8.3"
+        "phpunit/phpunit": "^8.3",
+        "squizlabs/php_codesniffer": "^3.6"
     },
     "autoload": {
         "psr-4": {
@@ -41,7 +42,8 @@
         "test": "vendor/bin/phpunit",
         "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit",
         "test-stable": "for version in 7.2 7.3 7.4 ; do if command -v php${version} > /dev/null 2>&1 ; then echo '\nPHP: '${version}'\n' && php${version} $(which composer) update --prefer-dist --no-interaction --prefer-stable > /dev/null 2>&1 && php${version} vendor/bin/phpunit ; fi ; done",
-        "test-lowest": "for version in 7.2 7.3 ; do if command -v php${version} > /dev/null 2>&1 ; then echo '\nPHP: '${version}'\n' && php${version} $(which composer) update --prefer-dist --no-interaction --prefer-lowest --prefer-stable > /dev/null 2>&1 && php${version} vendor/bin/phpunit ; fi ; done"
+        "test-lowest": "for version in 7.2 7.3 ; do if command -v php${version} > /dev/null 2>&1 ; then echo '\nPHP: '${version}'\n' && php${version} $(which composer) update --prefer-dist --no-interaction --prefer-lowest --prefer-stable > /dev/null 2>&1 && php${version} vendor/bin/phpunit ; fi ; done",
+        "code-style": "vendor/bin/phpcs -n src/ tests/"
     },
     "config": {
         "sort-packages": true
