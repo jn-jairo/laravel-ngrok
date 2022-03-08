@@ -20,6 +20,8 @@ jobs:
             - composer-v1-{{ .Branch }}-{{ checksum "composer.json" }}
             - composer-v1-{{ .Branch }}-
 
+      - run: sudo composer self-update --2
+
       - run: composer update -n --prefer-dist --prefer-stable --prefer-<< parameters.dependency >>
 
       - save_cache:
