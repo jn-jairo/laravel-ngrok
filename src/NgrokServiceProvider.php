@@ -97,6 +97,8 @@ class NgrokServiceProvider extends ServiceProvider
     {
         if ($request->hasHeader('x-original-host')) {
             $host = $request->header('x-original-host');
+        } elseif ($request->hasHeader('x-forwarded-host')) {
+            $host = $request->header('x-forwarded-host');
         } else {
             $host = $request->getHost();
         }

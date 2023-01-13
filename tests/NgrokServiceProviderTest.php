@@ -19,7 +19,26 @@ class NgrokServiceProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function test_boot_valid_ngrok_url() : void
+    public function bootValidNgrokUrlProvider() : array
+    {
+        return [
+            'ngrok_2' => [
+                [
+                    'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
+                ],
+            ],
+            'ngrok_3' => [
+                [
+                    'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.io',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider bootValidNgrokUrlProvider
+     */
+    public function test_boot_valid_ngrok_url(array $headers) : void
     {
         $urlGenerator = $this->prophesize(UrlGenerator::class);
         $urlGenerator->forceScheme('http')->shouldBeCalled();
@@ -36,9 +55,7 @@ class NgrokServiceProviderTest extends TestCase
             ['foo' => 'bar'],
             [],
             [],
-            [
-                'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
-            ]
+            $headers,
         );
 
         $app = $this->prophesize(Application::class);
@@ -52,7 +69,28 @@ class NgrokServiceProviderTest extends TestCase
         $this->assertSame('http://0000-0000.ngrok.io/foo', Paginator::resolveCurrentPath());
     }
 
-    public function test_boot_valid_secure_ngrok_url() : void
+    public function bootValidSecureNgrokUrlProvider() : array
+    {
+        return [
+            'ngrok_2' => [
+                [
+                    'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
+                    'HTTP_X_FORWARDED_PROTO' => 'https',
+                ],
+            ],
+            'ngrok_3' => [
+                [
+                    'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.io',
+                    'HTTP_X_FORWARDED_PROTO' => 'https',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider bootValidSecureNgrokUrlProvider
+     */
+    public function test_boot_valid_secure_ngrok_url(array $headers) : void
     {
         $urlGenerator = $this->prophesize(UrlGenerator::class);
         $urlGenerator->forceScheme('https')->shouldBeCalled();
@@ -69,10 +107,7 @@ class NgrokServiceProviderTest extends TestCase
             ['foo' => 'bar'],
             [],
             [],
-            [
-                'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
-                'HTTP_X_FORWARDED_PROTO' => 'https',
-            ]
+            $headers,
         );
 
         $app = $this->prophesize(Application::class);

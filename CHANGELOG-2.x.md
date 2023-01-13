@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.3...2.x)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.4...2.x)
+
+## [v2.0.4 (2023-01-13)](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.3...v2.0.4)
+
+### Added
+- Ngrok 3 support
 
 ## [v2.0.3 (2022-03-03)](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.2...v2.0.3)
 

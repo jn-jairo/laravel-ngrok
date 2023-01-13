@@ -139,7 +139,7 @@ class NgrokCommand extends Command
             if ($webServiceStarted && ! $tunnelStarted) {
                 $tunnels = $webService->getTunnels();
 
-                if (! empty($tunnels) && count($tunnels) > 1) {
+                if (! empty($tunnels)) {
                     $tunnelStarted = true;
 
                     foreach ($tunnels as $tunnel) {
