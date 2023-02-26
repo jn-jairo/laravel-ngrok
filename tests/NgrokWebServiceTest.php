@@ -1,93 +1,70 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use JnJairo\Laravel\Ngrok\NgrokWebService;
-use JnJairo\Laravel\Ngrok\Tests\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\StreamInterface;
 
-/**
- * @testdox Ngrok web service
- */
-class NgrokWebServiceTest extends TestCase
-{
-    use ProphecyTrait;
+uses(ProphecyTrait::class);
 
-    public function test_get_tunnels() : void
-    {
-        $tunnels = [
-            [
-                'public_url' => 'http://0000-0000.ngrok.io',
-                'config' => ['addr' => 'localhost:80'],
-            ],
-            [
-                'public_url' => 'https://0000-0000.ngrok.io',
-                'config' => ['addr' => 'localhost:80'],
-            ],
-        ];
+$tunnels = [
+    [
+        'public_url' => 'http://0000-0000.ngrok.io',
+        'config' => ['addr' => 'localhost:80'],
+    ],
+    [
+        'public_url' => 'https://0000-0000.ngrok.io',
+        'config' => ['addr' => 'localhost:80'],
+    ],
+];
 
-        $stream = $this->prophesize(StreamInterface::class);
-        $stream->__toString()->willReturn(json_encode(['tunnels' => $tunnels]))->shouldBeCalled();
+$json = json_encode(['tunnels' => $tunnels]);
+$emptyJson = json_encode(['tunnels' => []]);
 
-        $response = $this->prophesize(Response::class);
-        $response->getBody()->willReturn($stream->reveal())->shouldBeCalled();
+$dataset = [
+    'valid' => [
+        $json,
+        $tunnels,
+    ],
+    'empty' => [
+        $emptyJson,
+        [],
+    ],
+    'invalid' => [
+        '',
+        [],
+    ],
+];
 
-        $httpClient = $this->prophesize(Client::class);
-        $httpClient->request(
-            'GET',
-            'http://127.0.0.1:4040/api/tunnels'
-        )->willReturn(
-            $response->reveal()
-        )->shouldBeCalled();
+it('can get tunnels', function (
+    string $json,
+    array $tunnels
+) {
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\Psr\Http\Message\StreamInterface> $stream
+     */
+    $stream = prophesize(StreamInterface::class);
+    $stream->__toString()->willReturn($json)->shouldBeCalled();
 
-        $webService = new NgrokWebService($httpClient->reveal());
-        $this->assertSame($tunnels, $webService->getTunnels());
-    }
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\GuzzleHttp\Psr7\Response> $response
+     */
+    $response = prophesize(Response::class);
+    $response->getBody()->willReturn($stream->reveal())->shouldBeCalled();
 
-    public function test_get_tunnels_empty() : void
-    {
-        $tunnels = [];
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\GuzzleHttp\Client> $httpClient
+     */
+    $httpClient = prophesize(Client::class);
+    $httpClient->request(
+        'GET',
+        'http://127.0.0.1:4040/api/tunnels'
+    )->willReturn(
+        $response->reveal()
+    )->shouldBeCalled();
 
-        $stream = $this->prophesize(StreamInterface::class);
-        $stream->__toString()->willReturn(json_encode(['tunnels' => $tunnels]))->shouldBeCalled();
-
-        $response = $this->prophesize(Response::class);
-        $response->getBody()->willReturn($stream->reveal())->shouldBeCalled();
-
-        $httpClient = $this->prophesize(Client::class);
-        $httpClient->request(
-            'GET',
-            'http://127.0.0.1:4040/api/tunnels'
-        )->willReturn(
-            $response->reveal()
-        )->shouldBeCalled();
-
-        $webService = new NgrokWebService($httpClient->reveal());
-        $this->assertSame($tunnels, $webService->getTunnels());
-    }
-
-    public function test_get_tunnels_invalid_json() : void
-    {
-        $tunnels = [];
-
-        $stream = $this->prophesize(StreamInterface::class);
-        $stream->__toString()->willReturn('')->shouldBeCalled();
-
-        $response = $this->prophesize(Response::class);
-        $response->getBody()->willReturn($stream->reveal())->shouldBeCalled();
-
-        $httpClient = $this->prophesize(Client::class);
-        $httpClient->request(
-            'GET',
-            'http://127.0.0.1:4040/api/tunnels'
-        )->willReturn(
-            $response->reveal()
-        )->shouldBeCalled();
-
-        $webService = new NgrokWebService($httpClient->reveal());
-        $this->assertSame($tunnels, $webService->getTunnels());
-    }
-}
+    $webService = new NgrokWebService($httpClient->reveal());
+    expect($webService->getTunnels())
+        ->toBe($tunnels);
+})->with($dataset);

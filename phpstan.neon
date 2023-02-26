@@ -1,0 +1,11 @@
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        - '#Call to an undefined method Pest\\Expectation\\|Pest\\Support\\Extendable::#'
+        - '#Cannot access offset .* on mixed#'
+        - '#Cannot call method .* on Illuminate\\Testing\\PendingCommand\|int#'
+        - '#Cannot call method .* on mixed#'
+        - '#Call to an undefined method Prophecy\\Prophecy\\ObjectProphecy#'

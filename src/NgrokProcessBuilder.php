@@ -9,7 +9,7 @@ class NgrokProcessBuilder
     /**
      * Current working directory.
      *
-     * @var string
+     * @var ?string
      */
     protected $cwd;
 
@@ -26,7 +26,7 @@ class NgrokProcessBuilder
      *
      * @param string $cwd
      */
-    public function setWorkingDirectory(string $cwd) : void
+    public function setWorkingDirectory(string $cwd = null): void
     {
         $this->cwd = $cwd;
     }
@@ -36,7 +36,7 @@ class NgrokProcessBuilder
      *
      * @return string
      */
-    public function getWorkingDirectory() : string
+    public function getWorkingDirectory(): ?string
     {
         return $this->cwd;
     }
@@ -47,7 +47,7 @@ class NgrokProcessBuilder
      * @param string $hostHeader
      * @param string $port
      * @param string $host
-     * @param array $extra
+     * @param array<int, string> $extra
      * @return \Symfony\Component\Process\Process
      */
     public function buildProcess(
@@ -55,7 +55,7 @@ class NgrokProcessBuilder
         string $port = '80',
         string $host = '',
         array $extra = []
-    ) : Process {
+    ): Process {
         $command = ['ngrok', 'http', '--log', 'stdout'];
 
         $command = array_merge($command, $extra);

@@ -1,4 +1,3 @@
-[![Build Status](https://circleci.com/gh/jn-jairo/laravel-ngrok.svg?style=shield)](https://circleci.com/gh/jn-jairo/laravel-ngrok)
 [![Total Downloads](https://poser.pugx.org/jn-jairo/laravel-ngrok/downloads)](https://packagist.org/packages/jn-jairo/laravel-ngrok)
 [![Latest Stable Version](https://poser.pugx.org/jn-jairo/laravel-ngrok/v/stable)](https://packagist.org/packages/jn-jairo/laravel-ngrok)
 [![License](https://poser.pugx.org/jn-jairo/laravel-ngrok/license)](https://packagist.org/packages/jn-jairo/laravel-ngrok)
@@ -15,11 +14,12 @@ This package allows you to share your Laravel application with [ngrok](https://n
 
  Laravel  | Laravel Ngrok
 :---------|:----------
- 5.8.x    | 1.x
- 6.x      | 1.x
- 7.x      | 1.x
- 8.x      | 2.x
- 9.x      | 2.x
+  5.8.x   | 1.x
+  6.x     | 1.x
+  7.x     | 1.x
+  8.x     | 2.x
+  9.x     | 2.x
+ 10.x     | 3.x
 
 ## Installation
 

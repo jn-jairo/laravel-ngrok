@@ -3,8 +3,6 @@
 namespace JnJairo\Laravel\Ngrok;
 
 use Illuminate\Console\Command;
-use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
-use JnJairo\Laravel\Ngrok\NgrokWebService;
 use Symfony\Component\Process\Process;
 
 class NgrokCommand extends Command
@@ -58,15 +56,31 @@ class NgrokCommand extends Command
      *
      * @return int
      */
-    public function handle() : int
+    public function handle(): int
     {
+        /**
+         * @var string|null $hostHeader
+         */
         $hostHeader = $this->argument('host-header');
+        /**
+         * @var string|null $host
+         */
         $host = $this->option('host');
+        /**
+         * @var string|null $port
+         */
         $port = $this->option('port');
+        /**
+         * @var array<int, string> $extra
+         */
         $extra = $this->option('extra');
 
         if ($hostHeader === null) {
-            $url = $this->getLaravel()->make('config')->get('app.url');
+            /**
+             * @var \Illuminate\Config\Repository $config
+             */
+            $config = $this->getLaravel()->make('config');
+            $url = is_string($config->get('app.url')) ? $config->get('app.url') : '';
 
             $urlParsed = parse_url($url);
 
@@ -76,7 +90,7 @@ class NgrokCommand extends Command
                 }
 
                 if (isset($urlParsed['port']) && $port === null) {
-                    $port = $urlParsed['port'];
+                    $port = (string) $urlParsed['port'];
                 }
             }
         }
@@ -116,7 +130,7 @@ class NgrokCommand extends Command
      * @param \Symfony\Component\Process\Process $process
      * @return int Exit code.
      */
-    private function runProcess(Process $process) : int
+    private function runProcess(Process $process): int
     {
         $webService = $this->webService;
 
@@ -159,6 +173,6 @@ class NgrokCommand extends Command
 
         $this->error($process->getErrorOutput());
 
-        return $process->getExitCode();
+        return (int) $process->getExitCode();
     }
 }

@@ -1,244 +1,209 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
-
 use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
 use JnJairo\Laravel\Ngrok\NgrokWebService;
-use JnJairo\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Process\Process;
 
-/**
- * @testdox Ngrok command
- */
-class NgrokCommandTest extends TestCase
-{
-    use ProphecyTrait;
+uses(ProphecyTrait::class);
 
-    public function test_handle() : void
-    {
-        $hostHeader = 'example.com';
-        $port = '80';
-        $host = 'localhost';
-        $extra = [];
+$datasetValid = [
+    'basic' => [
+        ['app.url' => ''],
+        [
+            'host-header' => 'example.com',
+            '--host' => 'localhost',
+            '--port' => '80',
+        ],
+        [
+            'example.com',
+            '80',
+            'localhost',
+            [],
+        ],
+        [
+            'Host header: example.com',
+            'Host: localhost',
+            'Port: 80',
+        ],
+    ],
+    'extra' => [
+        ['app.url' => ''],
+        [
+            'host-header' => 'example.com',
+            '--host' => 'nginx',
+            '--port' => '80',
+            '--extra' => ['--region=eu', '--config=ngrok.yml'],
+        ],
+        [
+            'example.com',
+            '80',
+            'nginx',
+            ['--region=eu', '--config=ngrok.yml'],
+        ],
+        [
+            'Host header: example.com',
+            'Host: nginx',
+            'Port: 80',
+            'Extra: --region=eu --config=ngrok.yml',
+        ],
+    ],
+    'config' => [
+        ['app.url' => 'http://example.com:8000'],
+        [],
+        [
+            'example.com',
+            '8000',
+            'localhost',
+            [],
+        ],
+        [
+            'Host header: example.com',
+            'Host: localhost',
+            'Port: 8000',
+        ],
+    ],
+];
 
-        config(['app.url' => '']);
+$datasetInvalid = [
+    'invalid' => [
+        ['app.url' => ''],
+        [],
+        [
+            'example.com',
+            '8000',
+            'localhost',
+            [],
+        ],
+        [],
+    ],
+];
 
-        $tunnels = [
-            [
-                'public_url' => 'http://0000-0000.ngrok.io',
-                'config' => ['addr' => 'localhost:80'],
-            ],
-            [
-                'public_url' => 'https://0000-0000.ngrok.io',
-                'config' => ['addr' => 'localhost:80'],
-            ],
-        ];
+it('works', function (
+    array $config,
+    array $params,
+    array $expectedArguments,
+    array $expectedOutputs
+) {
+    config($config);
 
-        $webService = $this->prophesize(NgrokWebService::class);
-        $webService->setUrl('http://127.0.0.1:4040')->shouldBeCalled();
-        $webService->getTunnels()->willReturn($tunnels)->shouldBeCalled();
+    $port = $expectedArguments[1] ?: '80';
+    $host = $expectedArguments[2] ?: 'localhost';
 
-        $process = $this->prophesize(Process::class);
-        $process->run(\Prophecy\Argument::type('callable'))->will(function ($args) use ($process) {
-            $callback = $args[0];
+    $tunnels = [
+        [
+            'public_url' => 'http://0000-0000.ngrok.io',
+            'config' => ['addr' => $host . ':' . $port],
+        ],
+        [
+            'public_url' => 'https://0000-0000.ngrok.io',
+            'config' => ['addr' => $host . ':' . $port],
+        ],
+    ];
 
-            $process->getOutput()->willReturn('msg="starting web service" addr=127.0.0.1:4040')->shouldBeCalled();
-            $process->clearOutput()->willReturn($process)->shouldBeCalled();
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\JnJairo\Laravel\Ngrok\NgrokWebService> $webService
+     */
+    $webService = prophesize(NgrokWebService::class);
+    $webService->setUrl('http://127.0.0.1:4040')->shouldBeCalled();
+    $webService->getTunnels()->willReturn($tunnels)->shouldBeCalled();
 
-            $callback(Process::OUT, 'msg="starting web service" addr=127.0.0.1:4040');
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\Symfony\Component\Process\Process> $process
+     */
+    $process = prophesize(Process::class);
+    $process->run(\Prophecy\Argument::type('callable'))->will(function ($args) use ($process) {
+        $callback = $args[0];
 
-            $process->clearErrorOutput()->willReturn($process)->shouldBeCalled();
+        $process->getOutput()->willReturn('msg="starting web service" addr=127.0.0.1:4040')->shouldBeCalled();
+        $process->clearOutput()->willReturn($process)->shouldBeCalled();
 
-            $callback(Process::ERR, 'error');
+        $callback(Process::OUT, 'msg="starting web service" addr=127.0.0.1:4040');
 
-            return 0;
-        })->shouldBeCalled();
-        $process->getErrorOutput()->willReturn('')->shouldBeCalled();
-        $process->getExitCode()->willReturn(0)->shouldBeCalled();
+        $process->clearErrorOutput()->willReturn($process)->shouldBeCalled();
 
-        $processBuilder = $this->prophesize(NgrokProcessBuilder::class);
-        $processBuilder
-            ->buildProcess($hostHeader, $port, $host, $extra)
-            ->willReturn($process->reveal())
-            ->shouldBeCalled();
+        $callback(Process::ERR, 'error');
 
-        app()->instance(NgrokWebService::class, $webService->reveal());
-        app()->instance(NgrokProcessBuilder::class, $processBuilder->reveal());
+        return 0;
+    })->shouldBeCalled();
+    $process->getErrorOutput()->willReturn('')->shouldBeCalled();
+    $process->getExitCode()->willReturn(0)->shouldBeCalled();
 
-        $this->artisan('ngrok', [
-            'host-header' => $hostHeader,
-            '--host' => $host,
-            '--port' => $port,
-        ])
-             ->expectsOutput('Host header: ' . $hostHeader)
-             ->expectsOutput('Host: ' . $host)
-             ->expectsOutput('Port: ' . $port)
-             ->assertExitCode(0);
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\JnJairo\Laravel\Ngrok\NgrokProcessBuilder> $processBuilder
+     */
+    $processBuilder = prophesize(NgrokProcessBuilder::class);
+    $processBuilder
+        ->buildProcess(...$expectedArguments)
+        ->willReturn($process->reveal())
+        ->shouldBeCalled();
+
+    instance(NgrokWebService::class, $webService->reveal());
+    instance(NgrokProcessBuilder::class, $processBuilder->reveal());
+
+    $command = artisan('ngrok', $params);
+
+    foreach ($expectedOutputs as $output) {
+        $command = $command->expectsOutput($output);
     }
 
-    public function test_handle_extra() : void
-    {
-        $hostHeader = 'example.com';
-        $port = '80';
-        $host = 'nginx';
-        $extra = ['--region=eu', '--config=ngrok.yml'];
-        $extraString = '--region=eu --config=ngrok.yml';
+    $command->assertExitCode(0);
+})->with($datasetValid);
 
-        config(['app.url' => '']);
+it('fails', function (
+    array $config,
+    array $params,
+    array $expectedArguments,
+    array $expectedOutputs
+) {
+    config($config);
 
-        $tunnels = [
-            [
-                'public_url' => 'http://0000-0000.ngrok.io',
-                'config' => ['addr' => 'nginx:80'],
-            ],
-            [
-                'public_url' => 'https://0000-0000.ngrok.io',
-                'config' => ['addr' => 'nginx:80'],
-            ],
-        ];
+    $port = $expectedArguments[1] ?: '80';
+    $host = $expectedArguments[2] ?: 'localhost';
 
-        $webService = $this->prophesize(NgrokWebService::class);
-        $webService->setUrl('http://127.0.0.1:4040')->shouldBeCalled();
-        $webService->getTunnels()->willReturn($tunnels)->shouldBeCalled();
+    $tunnels = [
+        [
+            'public_url' => 'http://0000-0000.ngrok.io',
+            'config' => ['addr' => $host . ':' . $port],
+        ],
+        [
+            'public_url' => 'https://0000-0000.ngrok.io',
+            'config' => ['addr' => $host . ':' . $port],
+        ],
+    ];
 
-        $process = $this->prophesize(Process::class);
-        $process->run(\Prophecy\Argument::type('callable'))->will(function ($args) use ($process) {
-            $callback = $args[0];
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\JnJairo\Laravel\Ngrok\NgrokWebService> $webService
+     */
+    $webService = prophesize(NgrokWebService::class);
+    $webService->setUrl('http://127.0.0.1:4040')->shouldNotBeCalled();
+    $webService->getTunnels()->willReturn($tunnels)->shouldNotBeCalled();
 
-            $process->getOutput()->willReturn('msg="starting web service" addr=127.0.0.1:4040')->shouldBeCalled();
-            $process->clearOutput()->willReturn($process)->shouldBeCalled();
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\Symfony\Component\Process\Process> $process
+     */
+    $process = prophesize(Process::class);
+    $process->run(\Prophecy\Argument::type('callable'))->shouldNotBeCalled();
+    $process->getErrorOutput()->willReturn('')->shouldNotBeCalled();
+    $process->getExitCode()->willReturn(0)->shouldNotBeCalled();
 
-            $callback(Process::OUT, 'msg="starting web service" addr=127.0.0.1:4040');
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\JnJairo\Laravel\Ngrok\NgrokProcessBuilder> $processBuilder
+     */
+    $processBuilder = prophesize(NgrokProcessBuilder::class);
+    $processBuilder
+        ->buildProcess(...$expectedArguments)
+        ->willReturn($process->reveal())
+        ->shouldNotBeCalled();
 
-            $process->clearErrorOutput()->willReturn($process)->shouldBeCalled();
+    instance(NgrokWebService::class, $webService->reveal());
+    instance(NgrokProcessBuilder::class, $processBuilder->reveal());
 
-            $callback(Process::ERR, 'error');
+    $command = artisan('ngrok', $params);
 
-            return 0;
-        })->shouldBeCalled();
-        $process->getErrorOutput()->willReturn('')->shouldBeCalled();
-        $process->getExitCode()->willReturn(0)->shouldBeCalled();
-
-        $processBuilder = $this->prophesize(NgrokProcessBuilder::class);
-        $processBuilder
-            ->buildProcess($hostHeader, $port, $host, $extra)
-            ->willReturn($process->reveal())
-            ->shouldBeCalled();
-
-        app()->instance(NgrokWebService::class, $webService->reveal());
-        app()->instance(NgrokProcessBuilder::class, $processBuilder->reveal());
-
-        $this->artisan('ngrok', [
-            'host-header' => $hostHeader,
-            '--host' => $host,
-            '--port' => $port,
-            '--extra' => $extra,
-        ])
-             ->expectsOutput('Host header: ' . $hostHeader)
-             ->expectsOutput('Host: ' . $host)
-             ->expectsOutput('Port: ' . $port)
-             ->expectsOutput('Extra: ' . $extraString)
-             ->assertExitCode(0);
+    foreach ($expectedOutputs as $output) {
+        $command = $command->expectsOutput($output);
     }
 
-    public function test_handle_from_config() : void
-    {
-        $hostHeader = 'example.com';
-        $port = '8000';
-        $host = 'localhost';
-        $extra = [];
-
-        config(['app.url' => 'http://example.com:8000']);
-
-        $tunnels = [
-            [
-                'public_url' => 'http://0000-0000.ngrok.io',
-                'config' => ['addr' => 'localhost:8000'],
-            ],
-            [
-                'public_url' => 'https://0000-0000.ngrok.io',
-                'config' => ['addr' => 'localhost:8000'],
-            ],
-        ];
-
-        $webService = $this->prophesize(NgrokWebService::class);
-        $webService->setUrl('http://127.0.0.1:4040')->shouldBeCalled();
-        $webService->getTunnels()->willReturn($tunnels)->shouldBeCalled();
-
-        $process = $this->prophesize(Process::class);
-        $process->run(\Prophecy\Argument::type('callable'))->will(function ($args) use ($process) {
-            $callback = $args[0];
-
-            $process->getOutput()->willReturn('msg="starting web service" addr=127.0.0.1:4040')->shouldBeCalled();
-            $process->clearOutput()->willReturn($process)->shouldBeCalled();
-
-            $callback(Process::OUT, 'msg="starting web service" addr=127.0.0.1:4040');
-
-            $process->clearErrorOutput()->willReturn($process)->shouldBeCalled();
-
-            $callback(Process::ERR, 'error');
-
-            return 0;
-        })->shouldBeCalled();
-        $process->getErrorOutput()->willReturn('')->shouldBeCalled();
-        $process->getExitCode()->willReturn(0)->shouldBeCalled();
-
-        $processBuilder = $this->prophesize(NgrokProcessBuilder::class);
-        $processBuilder
-            ->buildProcess($hostHeader, $port, $host, $extra)
-            ->willReturn($process->reveal())
-            ->shouldBeCalled();
-
-        app()->instance(NgrokWebService::class, $webService->reveal());
-        app()->instance(NgrokProcessBuilder::class, $processBuilder->reveal());
-
-        $this->artisan('ngrok')
-             ->expectsOutput('Host header: ' . $hostHeader)
-             ->expectsOutput('Host: ' . $host)
-             ->expectsOutput('Port: ' . $port)
-             ->assertExitCode(0);
-    }
-
-    public function test_handle_invalid_host_header() : void
-    {
-        $hostHeader = 'example.com';
-        $port = '8000';
-        $host = 'localhost';
-        $extra = [];
-
-        config(['app.url' => '']);
-
-        $tunnels = [
-            [
-                'public_url' => 'http://0000-0000.ngrok.io',
-                'config' => ['addr' => 'localhost:8000'],
-            ],
-            [
-                'public_url' => 'https://0000-0000.ngrok.io',
-                'config' => ['addr' => 'localhost:8000'],
-            ],
-        ];
-
-        $webService = $this->prophesize(NgrokWebService::class);
-        $webService->setUrl('http://127.0.0.1:4040')->shouldNotBeCalled();
-        $webService->getTunnels()->willReturn($tunnels)->shouldNotBeCalled();
-
-        $process = $this->prophesize(Process::class);
-        $process->run(\Prophecy\Argument::type('callable'))->shouldNotBeCalled();
-        $process->getErrorOutput()->willReturn('')->shouldNotBeCalled();
-        $process->getExitCode()->willReturn(0)->shouldNotBeCalled();
-
-        $processBuilder = $this->prophesize(NgrokProcessBuilder::class);
-        $processBuilder
-            ->buildProcess($hostHeader, $port, $host, $extra)
-            ->willReturn($process->reveal())
-            ->shouldNotBeCalled();
-
-        app()->instance(NgrokWebService::class, $webService->reveal());
-        app()->instance(NgrokProcessBuilder::class, $processBuilder->reveal());
-
-        $this->artisan('ngrok')
-             ->assertExitCode(1);
-    }
-}
+    $command->assertExitCode(1);
+})->with($datasetInvalid);

@@ -1,167 +1,234 @@
 <?php
 
-namespace JnJairo\Laravel\Ngrok\Tests;
-
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator;
+use JnJairo\Laravel\Ngrok\NgrokCommand;
 use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
 use JnJairo\Laravel\Ngrok\NgrokServiceProvider;
 use JnJairo\Laravel\Ngrok\NgrokWebService;
-use JnJairo\Laravel\Ngrok\Tests\OrchestraTestCase as TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-/**
- * @testdox Ngrok service provider
- */
-class NgrokServiceProviderTest extends TestCase
-{
-    use ProphecyTrait;
+uses(ProphecyTrait::class);
 
-    public function bootValidNgrokUrlProvider() : array
-    {
-        return [
-            'ngrok_2' => [
-                [
-                    'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
-                ],
-            ],
-            'ngrok_3' => [
-                [
-                    'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.io',
-                ],
-            ],
-        ];
-    }
+$datasetValidNgrokUrl = [
+    'http_ngrok_2' => [
+        'http',
+        [
+            'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
+        ],
+    ],
+    'http_ngrok_3' => [
+        'http',
+        [
+            'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.io',
+        ],
+    ],
+    'https_ngrok_2' => [
+        'https',
+        [
+            'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ],
+    ],
+    'https_ngrok_3' => [
+        'https',
+        [
+            'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.io',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ],
+    ],
+];
+
+$datasetInvalidNgrokUrl = [
+    'http_empty' => [
+        'http',
+        [],
+    ],
+    'https_empty' => [
+        'https',
+        [],
+    ],
+    'http_ngrok_2_domain_top_level' => [
+        'http',
+        [
+            'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.com',
+        ],
+    ],
+    'http_ngrok_2_domain' => [
+        'http',
+        [
+            'HTTP_X_ORIGINAL_HOST' => '0000-0000.notngrok.io',
+        ],
+    ],
+    'http_ngrok_2_subdomain' => [
+        'http',
+        [
+            'HTTP_X_ORIGINAL_HOST' => '0000_0000.ngrok.io',
+        ],
+    ],
+    'http_ngrok_3_domain_top_level' => [
+        'http',
+        [
+            'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.com',
+        ],
+    ],
+    'http_ngrok_3_domain' => [
+        'http',
+        [
+            'HTTP_X_FORWARDED_HOST' => '0000-0000.notngrok.io',
+        ],
+    ],
+    'http_ngrok_3_subdomain' => [
+        'http',
+        [
+            'HTTP_X_FORWARDED_HOST' => '0000_0000.ngrok.io',
+        ],
+    ],
+    'https_ngrok_2_domain_top_level' => [
+        'https',
+        [
+            'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.com',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ],
+    ],
+    'https_ngrok_2_domain' => [
+        'https',
+        [
+            'HTTP_X_ORIGINAL_HOST' => '0000-0000.notngrok.io',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ],
+    ],
+    'https_ngrok_2_subdomain' => [
+        'https',
+        [
+            'HTTP_X_ORIGINAL_HOST' => '0000_0000.ngrok.io',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ],
+    ],
+    'https_ngrok_3_domain_top_level' => [
+        'https',
+        [
+            'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.com',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ],
+    ],
+    'https_ngrok_3_domain' => [
+        'https',
+        [
+            'HTTP_X_FORWARDED_HOST' => '0000-0000.notngrok.io',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ],
+    ],
+    'https_ngrok_3_subdomain' => [
+        'https',
+        [
+            'HTTP_X_FORWARDED_HOST' => '0000_0000.ngrok.io',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ],
+    ],
+];
+
+it('has registered the bindings', function () {
+    expect(app(NgrokProcessBuilder::class))
+        ->toBeInstanceOf(NgrokProcessBuilder::class);
+
+    expect(app(NgrokWebService::class))
+        ->toBeInstanceOf(NgrokWebService::class);
+});
+
+it('has registered the command', function () {
+    expect(app(NgrokCommand::class))
+        ->toBeInstanceOf(NgrokCommand::class);
+
+    artisan('ngrok', ['--help'])->assertExitCode(0);
+});
+
+it('does not run in console', function () {
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\Illuminate\Contracts\Foundation\Application> $app
+     */
+    $app = prophesize(Application::class);
+    $app->runningInConsole()->willReturn(true)->shouldBeCalled();
+    $app->make('url')->shouldNotBeCalled();
+    $app->make('request')->shouldNotBeCalled();
+
+    $serviceProvider = new NgrokServiceProvider($app->reveal());
+    $serviceProvider->boot();
+});
+
+it('does not setup invalid ngrok url', function (
+    string $scheme,
+    array $headers
+) {
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\Illuminate\Routing\UrlGenerator> $urlGenerator
+     */
+    $urlGenerator = prophesize(UrlGenerator::class);
+    $urlGenerator->forceScheme(\Prophecy\Argument::any())->shouldNotBeCalled();
+    $urlGenerator->forceRootUrl(\Prophecy\Argument::any())->shouldNotBeCalled();
+
+    $request = Request::create(
+        $scheme . '://example.com/foo',
+        'GET',
+        ['foo' => 'bar'],
+        [],
+        [],
+        $headers,
+    );
 
     /**
-     * @dataProvider bootValidNgrokUrlProvider
+     * @var \Prophecy\Prophecy\ObjectProphecy<\Illuminate\Contracts\Foundation\Application> $app
      */
-    public function test_boot_valid_ngrok_url(array $headers) : void
-    {
-        $urlGenerator = $this->prophesize(UrlGenerator::class);
-        $urlGenerator->forceScheme('http')->shouldBeCalled();
-        $urlGenerator->forceRootUrl('http://0000-0000.ngrok.io')->shouldBeCalled();
-        $urlGenerator->to(
-            'foo',
-            \Prophecy\Argument::any(),
-            \Prophecy\Argument::any()
-        )->willReturn('http://0000-0000.ngrok.io/foo')->shouldBeCalled();
+    $app = prophesize(Application::class);
+    $app->runningInConsole()->willReturn(false)->shouldBeCalled();
+    $app->make('url')->willReturn($urlGenerator->reveal())->shouldBeCalled();
+    $app->make('request')->willReturn($request)->shouldBeCalled();
 
-        $request = Request::create(
-            'http://example.com/foo',
-            'GET',
-            ['foo' => 'bar'],
-            [],
-            [],
-            $headers,
-        );
+    $serviceProvider = new NgrokServiceProvider($app->reveal());
+    $serviceProvider->boot();
 
-        $app = $this->prophesize(Application::class);
-        $app->runningInConsole()->willReturn(false)->shouldBeCalled();
-        $app->make('url')->willReturn($urlGenerator->reveal())->shouldBeCalled();
-        $app->make('request')->willReturn($request)->shouldBeCalled();
+    expect(Paginator::resolveCurrentPath())
+        ->not->toContain('ngrok');
+})->with($datasetInvalidNgrokUrl);
 
-        $serviceProvider = new NgrokServiceProvider($app->reveal());
-        $serviceProvider->boot();
+it('setup valid ngrok url', function (
+    string $scheme,
+    array $headers
+) {
+    /**
+     * @var \Prophecy\Prophecy\ObjectProphecy<\Illuminate\Routing\UrlGenerator> $urlGenerator
+     */
+    $urlGenerator = prophesize(UrlGenerator::class);
+    $urlGenerator->forceScheme($scheme)->shouldBeCalled();
+    $urlGenerator->forceRootUrl($scheme . '://0000-0000.ngrok.io')->shouldBeCalled();
+    $urlGenerator->to(
+        'foo',
+        \Prophecy\Argument::any(),
+        \Prophecy\Argument::any()
+    )->willReturn($scheme . '://0000-0000.ngrok.io/foo')->shouldBeCalled();
 
-        $this->assertSame('http://0000-0000.ngrok.io/foo', Paginator::resolveCurrentPath());
-    }
-
-    public function bootValidSecureNgrokUrlProvider() : array
-    {
-        return [
-            'ngrok_2' => [
-                [
-                    'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
-                    'HTTP_X_FORWARDED_PROTO' => 'https',
-                ],
-            ],
-            'ngrok_3' => [
-                [
-                    'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.io',
-                    'HTTP_X_FORWARDED_PROTO' => 'https',
-                ],
-            ],
-        ];
-    }
+    $request = Request::create(
+        $scheme . '://example.com/foo',
+        'GET',
+        ['foo' => 'bar'],
+        [],
+        [],
+        $headers,
+    );
 
     /**
-     * @dataProvider bootValidSecureNgrokUrlProvider
+     * @var \Prophecy\Prophecy\ObjectProphecy<\Illuminate\Contracts\Foundation\Application> $app
      */
-    public function test_boot_valid_secure_ngrok_url(array $headers) : void
-    {
-        $urlGenerator = $this->prophesize(UrlGenerator::class);
-        $urlGenerator->forceScheme('https')->shouldBeCalled();
-        $urlGenerator->forceRootUrl('https://0000-0000.ngrok.io')->shouldBeCalled();
-        $urlGenerator->to(
-            'foo',
-            \Prophecy\Argument::any(),
-            \Prophecy\Argument::any()
-        )->willReturn('https://0000-0000.ngrok.io/foo')->shouldBeCalled();
+    $app = prophesize(Application::class);
+    $app->runningInConsole()->willReturn(false)->shouldBeCalled();
+    $app->make('url')->willReturn($urlGenerator->reveal())->shouldBeCalled();
+    $app->make('request')->willReturn($request)->shouldBeCalled();
 
-        $request = Request::create(
-            'https://example.com/foo',
-            'GET',
-            ['foo' => 'bar'],
-            [],
-            [],
-            $headers,
-        );
+    $serviceProvider = new NgrokServiceProvider($app->reveal());
+    $serviceProvider->boot();
 
-        $app = $this->prophesize(Application::class);
-        $app->runningInConsole()->willReturn(false)->shouldBeCalled();
-        $app->make('url')->willReturn($urlGenerator->reveal())->shouldBeCalled();
-        $app->make('request')->willReturn($request)->shouldBeCalled();
-
-        $serviceProvider = new NgrokServiceProvider($app->reveal());
-        $serviceProvider->boot();
-
-        $this->assertSame('https://0000-0000.ngrok.io/foo', Paginator::resolveCurrentPath());
-    }
-
-    public function test_boot_not_ngrok_url() : void
-    {
-        $urlGenerator = $this->prophesize(UrlGenerator::class);
-        $urlGenerator->forceScheme(\Prophecy\Argument::any())->shouldNotBeCalled();
-        $urlGenerator->forceRootUrl(\Prophecy\Argument::any())->shouldNotBeCalled();
-
-        $request = Request::create(
-            'http://example.com/foo',
-            'GET',
-            ['foo' => 'bar'],
-            [],
-            [],
-            []
-        );
-
-        $app = $this->prophesize(Application::class);
-        $app->runningInConsole()->willReturn(false)->shouldBeCalled();
-        $app->make('url')->willReturn($urlGenerator->reveal())->shouldBeCalled();
-        $app->make('request')->willReturn($request)->shouldBeCalled();
-
-        $serviceProvider = new NgrokServiceProvider($app->reveal());
-        $serviceProvider->boot();
-    }
-
-    public function test_boot_not_running_in_console() : void
-    {
-        $app = $this->prophesize(Application::class);
-        $app->runningInConsole()->willReturn(true)->shouldBeCalled();
-        $app->make('url')->shouldNotBeCalled();
-        $app->make('request')->shouldNotBeCalled();
-
-        $serviceProvider = new NgrokServiceProvider($app->reveal());
-        $serviceProvider->boot();
-    }
-
-    public function test_register_bind() : void
-    {
-        $processBuilder = app(NgrokProcessBuilder::class);
-        $this->assertInstanceOf(NgrokProcessBuilder::class, $processBuilder, 'Bind ' . NgrokProcessBuilder::class);
-
-        $webService = app(NgrokWebService::class);
-        $this->assertInstanceOf(NgrokWebService::class, $webService, 'Bind ' . NgrokWebService::class);
-    }
-}
+    expect(Paginator::resolveCurrentPath())
+        ->toBe($scheme . '://0000-0000.ngrok.io/foo');
+})->with($datasetValidNgrokUrl);

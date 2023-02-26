@@ -22,9 +22,9 @@ class NgrokWebService
 
     /**
      * @param \GuzzleHttp\Client $httpClient
-     * @param string|null $url
+     * @param string $url
      */
-    public function __construct(Client $httpClient = null, string $url = 'http://127.0.0.1:4040')
+    public function __construct(Client $httpClient, string $url = 'http://127.0.0.1:4040')
     {
         $this->setHttpClient($httpClient);
         $this->setUrl($url);
@@ -35,7 +35,7 @@ class NgrokWebService
      *
      * @param string $url
      */
-    public function setUrl(string $url) : void
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }
@@ -45,7 +45,7 @@ class NgrokWebService
      *
      * @return string
      */
-    public function getUrl() : string
+    public function getUrl(): string
     {
         return $this->url;
     }
@@ -55,7 +55,7 @@ class NgrokWebService
      *
      * @param \GuzzleHttp\Client $httpClient
      */
-    public function setHttpClient(Client $httpClient) : void
+    public function setHttpClient(Client $httpClient): void
     {
         $this->httpClient = $httpClient;
     }
@@ -65,7 +65,7 @@ class NgrokWebService
      *
      * @return \GuzzleHttp\Client
      */
-    public function getHttpClient() : Client
+    public function getHttpClient(): Client
     {
         return $this->httpClient;
     }
@@ -73,9 +73,9 @@ class NgrokWebService
     /**
      * Request the tunnels.
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
-    public function getTunnels() : array
+    public function getTunnels(): array
     {
         $tunnels = [];
 
@@ -88,6 +88,9 @@ class NgrokWebService
         );
 
         if ($response !== false && isset($response['tunnels']) && ! empty($response['tunnels'])) {
+            /**
+             * @var array<int, array<string, mixed>> $tunnels
+             */
             $tunnels = $response['tunnels'];
         }
 

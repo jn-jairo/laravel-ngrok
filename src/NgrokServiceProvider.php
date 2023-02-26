@@ -6,9 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\ServiceProvider;
-use JnJairo\Laravel\Ngrok\NgrokCommand;
-use JnJairo\Laravel\Ngrok\NgrokProcessBuilder;
-use JnJairo\Laravel\Ngrok\NgrokWebService;
 
 class NgrokServiceProvider extends ServiceProvider
 {
@@ -17,10 +14,17 @@ class NgrokServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot() : void
+    public function boot(): void
     {
         if (! $this->app->runningInConsole()) {
+            /**
+             * @var \Illuminate\Routing\UrlGenerator $urlGenerator
+             */
             $urlGenerator = $this->app->make('url');
+
+            /**
+             * @var \Illuminate\Http\Request $request
+             */
             $request = $this->app->make('request');
 
             $this->forceNgrokSchemeHost($urlGenerator, $request);
@@ -32,7 +36,7 @@ class NgrokServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register() : void
+    public function register(): void
     {
         $this->app->bind(NgrokProcessBuilder::class, function ($app) {
             return new NgrokProcessBuilder($app->basePath());
@@ -54,7 +58,7 @@ class NgrokServiceProvider extends ServiceProvider
      * @param \Illuminate\Http\Request $request
      * @return void
      */
-    private function forceNgrokSchemeHost(UrlGenerator $urlGenerator, Request $request) : void
+    private function forceNgrokSchemeHost(UrlGenerator $urlGenerator, Request $request): void
     {
         $host = $this->extractOriginalHost($request);
 
@@ -76,9 +80,9 @@ class NgrokServiceProvider extends ServiceProvider
      * @param \Illuminate\Http\Request $request
      * @return string
      */
-    private function extractOriginalScheme(Request $request) : string
+    private function extractOriginalScheme(Request $request): string
     {
-        if ($request->hasHeader('x-forwarded-proto')) {
+        if ($request->hasHeader('x-forwarded-proto') && is_string($request->header('x-forwarded-proto'))) {
             $scheme = $request->header('x-forwarded-proto');
         } else {
             $scheme = $request->getScheme();
@@ -93,11 +97,11 @@ class NgrokServiceProvider extends ServiceProvider
      * @param \Illuminate\Http\Request $request
      * @return string
      */
-    private function extractOriginalHost(Request $request) : string
+    private function extractOriginalHost(Request $request): string
     {
-        if ($request->hasHeader('x-original-host')) {
+        if ($request->hasHeader('x-original-host') && is_string($request->header('x-original-host'))) {
             $host = $request->header('x-original-host');
-        } elseif ($request->hasHeader('x-forwarded-host')) {
+        } elseif ($request->hasHeader('x-forwarded-host') && is_string($request->header('x-forwarded-host'))) {
             $host = $request->header('x-forwarded-host');
         } else {
             $host = $request->getHost();
@@ -112,8 +116,8 @@ class NgrokServiceProvider extends ServiceProvider
      * @param string $host
      * @return bool
      */
-    private function isNgrokHost(string $host) : bool
+    private function isNgrokHost(string $host): bool
     {
-        return preg_match('/^[\.\-a-z0-9]+\.ngrok\.io$/i', $host);
+        return (bool) preg_match('/^[\.\-a-z0-9]+\.ngrok\.io$/i', $host);
     }
 }
