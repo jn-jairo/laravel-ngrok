@@ -54,7 +54,7 @@ class NgrokProcessBuilder
         string $hostHeader = '',
         string $port = '80',
         string $host = '',
-        array $extra = []
+        array $extra = [],
     ): Process {
         $command = ['ngrok', 'http', '--log', 'stdout'];
 

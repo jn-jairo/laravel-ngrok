@@ -83,7 +83,7 @@ test:
 		$(ARGS)
 
 .PHONY: test-coverage
-test-coverage: clear-coverage
+test-coverage: clean-coverage
 	@$(call show_title,'TEST COVERAGE') \
 	XDEBUG_MODE=coverage \
 	php -d zend_extension=xdebug.so \
@@ -119,7 +119,7 @@ parallel-test:
 		--passthru="--do-not-cache-result"
 
 .PHONY: parallel-test-coverage
-parallel-test-coverage: clear-coverage
+parallel-test-coverage: clean-coverage
 	@$(call show_title,'PARALLEL TEST COVERAGE') \
 	XDEBUG_MODE=coverage \
 	php -d zend_extension=xdebug.so \
@@ -132,7 +132,7 @@ parallel-test-coverage: clear-coverage
 		--coverage
 
 .PHONY: infection-test
-infection-test: clear-infection
+infection-test: clean-infection
 	@$(call show_title,'INFECTION TEST') \
 	infection \
 		--threads=$(shell nproc) \
@@ -164,15 +164,15 @@ show-coverage:
 show-infection:
 	@xdg-open build/infection/infection.html > /dev/null 2>&1
 
-.PHONY: clear
-clear: clear-coverage clear-infection
+.PHONY: clean
+clean: clean-coverage clean-infection
 
-.PHONY: clear-coverage
-clear-coverage:
+.PHONY: clean-coverage
+clean-coverage:
 	@$(call show_title,'CLEAR COVERAGE') \
 	(rm -r build/coverage > /dev/null 2>&1 || true)
 
-.PHONY: clear-infection
-clear-infection:
+.PHONY: clean-infection
+clean-infection:
 	@$(call show_title,'CLEAR INFECTION') \
 	(rm -r build/infection > /dev/null 2>&1 || true)

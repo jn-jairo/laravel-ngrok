@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v3.0.0...3.x)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v3.0.1...3.x)
+
+## [v3.0.1 (2023-04-12)](https://github.com/jn-jairo/laravel-ngrok/compare/v3.0.0...v3.0.1)
+
+### Added
+- New ngrok domains
 
 ## [v3.0.0 (2023-02-25)](https://github.com/jn-jairo/laravel-ngrok/compare/v2.0.4...v3.0.0)
 

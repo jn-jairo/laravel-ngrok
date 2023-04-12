@@ -82,9 +82,9 @@ class NgrokWebService
         $response = json_decode(
             $this->getHttpClient()->request(
                 'GET',
-                $this->getUrl() . '/api/tunnels'
+                $this->getUrl() . '/api/tunnels',
             )->getBody(),
-            true
+            true,
         );
 
         if ($response !== false && isset($response['tunnels']) && ! empty($response['tunnels'])) {

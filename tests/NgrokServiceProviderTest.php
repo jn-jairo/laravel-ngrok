@@ -12,34 +12,51 @@ use Prophecy\PhpUnit\ProphecyTrait;
 
 uses(ProphecyTrait::class);
 
-$datasetValidNgrokUrl = [
-    'http_ngrok_2' => [
-        'http',
-        [
-            'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
-        ],
-    ],
-    'http_ngrok_3' => [
-        'http',
-        [
-            'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.io',
-        ],
-    ],
-    'https_ngrok_2' => [
-        'https',
-        [
-            'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok.io',
-            'HTTP_X_FORWARDED_PROTO' => 'https',
-        ],
-    ],
-    'https_ngrok_3' => [
-        'https',
-        [
-            'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok.io',
-            'HTTP_X_FORWARDED_PROTO' => 'https',
-        ],
-    ],
-];
+$datasetValidNgrokUrl = (function () {
+    $dataset = [];
+
+    $domains = [
+        'legacy' => 'ngrok.io',
+        'free_app' => 'ngrok-free.app',
+        'free_dev' => 'ngrok-free.dev',
+        'paid_app' => 'ngrok.app',
+        'paid_dev' => 'ngrok.dev',
+    ];
+
+    foreach ($domains as $label => $domain) {
+        $dataset[$label . '_http_ngrok_2'] = [
+            'http',
+            [
+                'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok-free.app',
+            ],
+        ];
+
+        $dataset[$label . '_http_ngrok_3'] = [
+            'http',
+            [
+                'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok-free.app',
+            ],
+        ];
+
+        $dataset[$label . '_https_ngrok_2'] = [
+            'https',
+            [
+                'HTTP_X_ORIGINAL_HOST' => '0000-0000.ngrok-free.app',
+                'HTTP_X_FORWARDED_PROTO' => 'https',
+            ],
+        ];
+
+        $dataset[$label . '_https_ngrok_3'] = [
+            'https',
+            [
+                'HTTP_X_FORWARDED_HOST' => '0000-0000.ngrok-free.app',
+                'HTTP_X_FORWARDED_PROTO' => 'https',
+            ],
+        ];
+    }
+
+    return $dataset;
+})();
 
 $datasetInvalidNgrokUrl = [
     'http_empty' => [
@@ -59,13 +76,13 @@ $datasetInvalidNgrokUrl = [
     'http_ngrok_2_domain' => [
         'http',
         [
-            'HTTP_X_ORIGINAL_HOST' => '0000-0000.notngrok.io',
+            'HTTP_X_ORIGINAL_HOST' => '0000-0000.notngrok-free.app',
         ],
     ],
     'http_ngrok_2_subdomain' => [
         'http',
         [
-            'HTTP_X_ORIGINAL_HOST' => '0000_0000.ngrok.io',
+            'HTTP_X_ORIGINAL_HOST' => '0000_0000.ngrok-free.app',
         ],
     ],
     'http_ngrok_3_domain_top_level' => [
@@ -77,13 +94,13 @@ $datasetInvalidNgrokUrl = [
     'http_ngrok_3_domain' => [
         'http',
         [
-            'HTTP_X_FORWARDED_HOST' => '0000-0000.notngrok.io',
+            'HTTP_X_FORWARDED_HOST' => '0000-0000.notngrok-free.app',
         ],
     ],
     'http_ngrok_3_subdomain' => [
         'http',
         [
-            'HTTP_X_FORWARDED_HOST' => '0000_0000.ngrok.io',
+            'HTTP_X_FORWARDED_HOST' => '0000_0000.ngrok-free.app',
         ],
     ],
     'https_ngrok_2_domain_top_level' => [
@@ -96,14 +113,14 @@ $datasetInvalidNgrokUrl = [
     'https_ngrok_2_domain' => [
         'https',
         [
-            'HTTP_X_ORIGINAL_HOST' => '0000-0000.notngrok.io',
+            'HTTP_X_ORIGINAL_HOST' => '0000-0000.notngrok-free.app',
             'HTTP_X_FORWARDED_PROTO' => 'https',
         ],
     ],
     'https_ngrok_2_subdomain' => [
         'https',
         [
-            'HTTP_X_ORIGINAL_HOST' => '0000_0000.ngrok.io',
+            'HTTP_X_ORIGINAL_HOST' => '0000_0000.ngrok-free.app',
             'HTTP_X_FORWARDED_PROTO' => 'https',
         ],
     ],
@@ -117,14 +134,14 @@ $datasetInvalidNgrokUrl = [
     'https_ngrok_3_domain' => [
         'https',
         [
-            'HTTP_X_FORWARDED_HOST' => '0000-0000.notngrok.io',
+            'HTTP_X_FORWARDED_HOST' => '0000-0000.notngrok-free.app',
             'HTTP_X_FORWARDED_PROTO' => 'https',
         ],
     ],
     'https_ngrok_3_subdomain' => [
         'https',
         [
-            'HTTP_X_FORWARDED_HOST' => '0000_0000.ngrok.io',
+            'HTTP_X_FORWARDED_HOST' => '0000_0000.ngrok-free.app',
             'HTTP_X_FORWARDED_PROTO' => 'https',
         ],
     ],
@@ -160,7 +177,7 @@ it('does not run in console', function () {
 
 it('does not setup invalid ngrok url', function (
     string $scheme,
-    array $headers
+    array $headers,
 ) {
     /**
      * @var \Prophecy\Prophecy\ObjectProphecy<\Illuminate\Routing\UrlGenerator> $urlGenerator
@@ -195,19 +212,19 @@ it('does not setup invalid ngrok url', function (
 
 it('setup valid ngrok url', function (
     string $scheme,
-    array $headers
+    array $headers,
 ) {
     /**
      * @var \Prophecy\Prophecy\ObjectProphecy<\Illuminate\Routing\UrlGenerator> $urlGenerator
      */
     $urlGenerator = prophesize(UrlGenerator::class);
     $urlGenerator->forceScheme($scheme)->shouldBeCalled();
-    $urlGenerator->forceRootUrl($scheme . '://0000-0000.ngrok.io')->shouldBeCalled();
+    $urlGenerator->forceRootUrl($scheme . '://0000-0000.ngrok-free.app')->shouldBeCalled();
     $urlGenerator->to(
         'foo',
         \Prophecy\Argument::any(),
-        \Prophecy\Argument::any()
-    )->willReturn($scheme . '://0000-0000.ngrok.io/foo')->shouldBeCalled();
+        \Prophecy\Argument::any(),
+    )->willReturn($scheme . '://0000-0000.ngrok-free.app/foo')->shouldBeCalled();
 
     $request = Request::create(
         $scheme . '://example.com/foo',
@@ -230,5 +247,5 @@ it('setup valid ngrok url', function (
     $serviceProvider->boot();
 
     expect(Paginator::resolveCurrentPath())
-        ->toBe($scheme . '://0000-0000.ngrok.io/foo');
+        ->toBe($scheme . '://0000-0000.ngrok-free.app/foo');
 })->with($datasetValidNgrokUrl);

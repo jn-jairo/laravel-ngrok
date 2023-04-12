@@ -61,7 +61,7 @@ $dataset = [
 
 it('can build process', function (
     array $args,
-    string $command
+    string $command,
 ) {
     $processBuilder = new NgrokProcessBuilder(__DIR__);
     $process = $processBuilder->buildProcess(...$args);

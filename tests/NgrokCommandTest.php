@@ -83,7 +83,7 @@ it('works', function (
     array $config,
     array $params,
     array $expectedArguments,
-    array $expectedOutputs
+    array $expectedOutputs,
 ) {
     config($config);
 
@@ -92,11 +92,11 @@ it('works', function (
 
     $tunnels = [
         [
-            'public_url' => 'http://0000-0000.ngrok.io',
+            'public_url' => 'http://0000-0000.ngrok-free.app',
             'config' => ['addr' => $host . ':' . $port],
         ],
         [
-            'public_url' => 'https://0000-0000.ngrok.io',
+            'public_url' => 'https://0000-0000.ngrok-free.app',
             'config' => ['addr' => $host . ':' . $port],
         ],
     ];
@@ -154,7 +154,7 @@ it('fails', function (
     array $config,
     array $params,
     array $expectedArguments,
-    array $expectedOutputs
+    array $expectedOutputs,
 ) {
     config($config);
 
@@ -163,11 +163,11 @@ it('fails', function (
 
     $tunnels = [
         [
-            'public_url' => 'http://0000-0000.ngrok.io',
+            'public_url' => 'http://0000-0000.ngrok-free.app',
             'config' => ['addr' => $host . ':' . $port],
         ],
         [
-            'public_url' => 'https://0000-0000.ngrok.io',
+            'public_url' => 'https://0000-0000.ngrok-free.app',
             'config' => ['addr' => $host . ':' . $port],
         ],
     ];

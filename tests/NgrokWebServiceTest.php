@@ -10,11 +10,11 @@ uses(ProphecyTrait::class);
 
 $tunnels = [
     [
-        'public_url' => 'http://0000-0000.ngrok.io',
+        'public_url' => 'http://0000-0000.ngrok-free.app',
         'config' => ['addr' => 'localhost:80'],
     ],
     [
-        'public_url' => 'https://0000-0000.ngrok.io',
+        'public_url' => 'https://0000-0000.ngrok-free.app',
         'config' => ['addr' => 'localhost:80'],
     ],
 ];
@@ -39,7 +39,7 @@ $dataset = [
 
 it('can get tunnels', function (
     string $json,
-    array $tunnels
+    array $tunnels,
 ) {
     /**
      * @var \Prophecy\Prophecy\ObjectProphecy<\Psr\Http\Message\StreamInterface> $stream
@@ -59,9 +59,9 @@ it('can get tunnels', function (
     $httpClient = prophesize(Client::class);
     $httpClient->request(
         'GET',
-        'http://127.0.0.1:4040/api/tunnels'
+        'http://127.0.0.1:4040/api/tunnels',
     )->willReturn(
-        $response->reveal()
+        $response->reveal(),
     )->shouldBeCalled();
 
     $webService = new NgrokWebService($httpClient->reveal());

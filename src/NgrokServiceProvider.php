@@ -10,6 +10,19 @@ use Illuminate\Support\ServiceProvider;
 class NgrokServiceProvider extends ServiceProvider
 {
     /**
+     * Ngrok valid domains.
+     *
+     * @var array<int, string>
+     */
+    public const NGROK_DOMAINS = [
+        'ngrok.io',
+        'ngrok-free.app',
+        'ngrok-free.dev',
+        'ngrok.app',
+        'ngrok.dev',
+    ];
+
+    /**
      * Bootstrap the application services.
      *
      * @return void
@@ -118,6 +131,12 @@ class NgrokServiceProvider extends ServiceProvider
      */
     private function isNgrokHost(string $host): bool
     {
-        return (bool) preg_match('/^[\.\-a-z0-9]+\.ngrok\.io$/i', $host);
+        $domains = collect(self::NGROK_DOMAINS)
+            ->map(fn($domain) => preg_quote($domain, '/'))
+            ->join('|');
+
+        $regex = '/^[\.\-a-z0-9]+\.(?:' . $domains . ')$/i';
+
+        return (bool) preg_match($regex, $host);
     }
 }
