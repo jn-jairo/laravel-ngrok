@@ -16,16 +16,16 @@
     "require": {
         "php": "^8.1",
         "guzzlehttp/guzzle": "^6.5.8|^7.4.5",
-        "illuminate/console": "^8.83|^9.0|^10.0",
-        "illuminate/http": "^8.83|^9.0|^10.0",
-        "illuminate/pagination": "^8.83|^9.0|^10.0",
-        "illuminate/routing": "^8.83|^9.0|^10.0",
-        "illuminate/support": "^8.83|^9.0|^10.0",
-        "symfony/process": "^5.4|^6.0"
+        "illuminate/console": "^8.83|^9.0|^10.0|^11.0",
+        "illuminate/http": "^8.83|^9.0|^10.0|^11.0",
+        "illuminate/pagination": "^8.83|^9.0|^10.0|^11.0",
+        "illuminate/routing": "^8.83|^9.0|^10.0|^11.0",
+        "illuminate/support": "^8.83|^9.0|^10.0|^11.0",
+        "symfony/process": "^5.4|^6.0|^7.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.24|^7.0|^8.0",
-        "pestphp/pest": "^1.22",
+        "orchestra/testbench": "^6.24|^7.0|^8.0|^9.0",
+        "pestphp/pest": "^1.22|^2.34",
         "pestphp/pest-plugin-parallel": "^1.2",
         "phpspec/prophecy": "^1.17",
         "phpspec/prophecy-phpunit": "^2.0",
