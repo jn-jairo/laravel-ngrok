@@ -5,8 +5,12 @@ STABLE_DEPS += '8.1|10.0|8.0'
 STABLE_DEPS += '8.2|9|7.0'
 STABLE_DEPS += '8.2|10.0|8.0'
 STABLE_DEPS += '8.2|11.0|9.0'
+STABLE_DEPS += '8.2|12.0|10.0'
 STABLE_DEPS += '8.3|10.0|8.0'
 STABLE_DEPS += '8.3|11.0|9.0'
+STABLE_DEPS += '8.3|12.0|10.0'
+STABLE_DEPS += '8.4|11.0|9.0'
+STABLE_DEPS += '8.4|12.0|10.0'
 
 # php_version|laravel_version|orchestra_version
 LOWEST_DEPS += '8.1|8.83|6.24'
@@ -15,8 +19,12 @@ LOWEST_DEPS += '8.1|10.0|8.0'
 LOWEST_DEPS += '8.2|9|7.0'
 LOWEST_DEPS += '8.2|10.0|8.0'
 LOWEST_DEPS += '8.2|11.0|9.0'
+LOWEST_DEPS += '8.2|12.0|10.0'
 LOWEST_DEPS += '8.3|10.0|8.0'
 LOWEST_DEPS += '8.3|11.0|9.0'
+LOWEST_DEPS += '8.3|12.0|10.0'
+LOWEST_DEPS += '8.4|11.0|9.0'
+LOWEST_DEPS += '8.4|12.0|10.0'
 
 define show_title
 	title=$1 ; \
@@ -44,12 +52,15 @@ define test_version
 	php_version=$$(echo $${versions} | cut -d'|' -f 1); \
 	laravel_version=$$(echo $${versions} | cut -d'|' -f 2); \
 	orchestra_version=$$(echo $${versions} | cut -d'|' -f 3); \
-	if command -v php$${php_version} > /dev/null 2>&1 ; \
+	asdf_php_version=$$(asdf list php | sed 's/[^0-9\.]//g' | grep "^$${php_version}" | tail -n 1) ; \
+	if [ -n "$${asdf_php_version}" ] ; \
 	then \
+		$$(asdf set php $${asdf_php_version}) ; \
+		$$(asdf reshim php) ; \
 		$(call clean_cache) \
 		$(call show_title,'PHP: '$${php_version}' LARAVEL: '$${laravel_version}' ORCHESTRA: '$${orchestra_version}) \
 		echo -n 'Updating dependencies... ' ; \
-		output_composer=$$(php$${php_version} $$(which composer) update --prefer-dist --no-interaction $${composer_args} --prefer-stable --with=laravel/framework:^$${laravel_version} --with=orchestra/testbench:^$${orchestra_version} --with=orchestra/testbench-core:^$${orchestra_version} 2>&1) ; \
+		output_composer=$$(composer update --prefer-dist --no-interaction $${composer_args} --prefer-stable --with=laravel/framework:^$${laravel_version} --with=orchestra/testbench:^$${orchestra_version} --with=orchestra/testbench-core:^$${orchestra_version} 2>&1) ; \
 		if [ $$? -ne 0 ] ; \
 		then \
 			echo 'ERROR' ; \
@@ -58,7 +69,7 @@ define test_version
 		fi; \
 		echo 'OK' ; \
 		echo -n 'Testing... ' ; \
-		output_php=$$(php$${php_version} vendor/bin/pest \
+		output_php=$$(php vendor/bin/pest \
 			--do-not-cache-result 2>&1) ; \
 		if [ $$? -ne 0 ] ; \
 		then \
@@ -67,6 +78,9 @@ define test_version
 			continue ; \
 		fi; \
 		echo 'OK' ; \
+		asdf_php_version=$$(asdf list php | sed 's/[^0-9\.]//g' | tail -n 1) ; \
+		$$(asdf set php $${asdf_php_version}) ; \
+		$$(asdf reshim php) ; \
 		$(call clean_cache) \
 	fi;
 endef
