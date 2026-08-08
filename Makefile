@@ -11,6 +11,8 @@ STABLE_DEPS += '8.3|11.0|9.0'
 STABLE_DEPS += '8.3|12.0|10.0'
 STABLE_DEPS += '8.4|11.0|9.0'
 STABLE_DEPS += '8.4|12.0|10.0'
+STABLE_DEPS += '8.4|13.0|11.0'
+STABLE_DEPS += '8.5|13.0|11.0'
 
 # php_version|laravel_version|orchestra_version
 LOWEST_DEPS += '8.1|8.83|6.24'
@@ -25,6 +27,8 @@ LOWEST_DEPS += '8.3|11.0|9.0'
 LOWEST_DEPS += '8.3|12.0|10.0'
 LOWEST_DEPS += '8.4|11.0|9.0'
 LOWEST_DEPS += '8.4|12.0|10.0'
+LOWEST_DEPS += '8.4|13.0|11.0'
+LOWEST_DEPS += '8.5|13.0|11.0'
 
 define show_title
 	title=$1 ; \

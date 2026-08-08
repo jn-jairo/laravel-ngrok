@@ -22,6 +22,7 @@ This package allows you to share your Laravel application with [ngrok](https://n
  10.x     | 3.x
  11.x     | 3.x
  12.x     | 3.x
+ 13.x     | 3.x
 
 ## Installation
 

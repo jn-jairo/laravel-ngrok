@@ -1,6 +1,11 @@
 # Changelog
 
-## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v3.0.3...3.x)
+## [Unreleased](https://github.com/jn-jairo/laravel-ngrok/compare/v3.0.4...3.x)
+
+## [v3.0.4 (2026-08-07)](https://github.com/jn-jairo/laravel-ngrok/compare/v3.0.3...v3.0.4)
+
+### Added
+- Laravel 13 support
 
 ## [v3.0.3 (2025-02-26)](https://github.com/jn-jairo/laravel-ngrok/compare/v3.0.2...v3.0.3)
 
